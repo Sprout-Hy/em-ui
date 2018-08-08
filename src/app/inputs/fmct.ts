@@ -12,7 +12,9 @@ import {
 import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl} from '@angular/forms';
 
 export const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR: any = {
-    provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => InputComponent2), multi: true
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => InputComponent2),
+    multi: true
 };
 
 @Component({

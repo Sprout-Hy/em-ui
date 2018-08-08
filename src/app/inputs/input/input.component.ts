@@ -1,7 +1,9 @@
 import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Provider} from '@angular/core/src/di';
+import {DomSanitizer} from '@angular/platform-browser';
 
-export const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR:any = {
+export const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR:Provider = {
   provide:NG_VALUE_ACCESSOR,
   useExisting:forwardRef(()=>
     InputComponent
@@ -17,10 +19,12 @@ export const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR:any = {
   ],
   template:
   `  
-    <div class="el-input-shell">
+    <div class="el-input-shell" [style]="setStyle()" >
       <input
         [type]="nativeType"
         class="el-input"
+        [placeholder]="placeholder"
+        [value]="nativeValue" 
       />
     </div>
     
@@ -28,9 +32,12 @@ export const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR:any = {
   styleUrls: ['./input.component.scss']
 })
 export class InputComponent implements OnInit, ControlValueAccessor{
+  /*@Input*/
   @Input('type') nativeType:'text'|'number'|'password' = 'text';
-  /*@Input('formControlName') ngFormControlName:string = null;*/
-  constructor(private fb:FormBuilder) { }
+  @Input() placeholder:string = '';
+  @Input('value') nativeValue:any;
+  @Input() style:string ='';
+  constructor(private fb:FormBuilder,private filtration:DomSanitizer) { }
   ngOnInit() {
   }
   writeValue(){
@@ -43,5 +50,9 @@ export class InputComponent implements OnInit, ControlValueAccessor{
 
   registerOnTouched(){
 
+  }
+
+  public setStyle(){
+    return this.filtration.bypassSecurityTrustStyle(this.style)
   }
 }
