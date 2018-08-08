@@ -1,0 +1,35 @@
+.em-button {
+  user-select: none;
+  cursor: pointer;
+  display: inline-block;
+  -webkit-appearance: none;
+  outline: none;
+  white-space: nowrap;
+  border-radius: 5px;
+  line-height: 1;
+  text-align: center;
+  background-color: #fff;
+  color: #5a5d64;
+  border: 1px solid #d8dce5;
+  padding: 0;
+  position: relative;
+  &.block{
+    width: 100%;
+    .btn_inner{
+      width: 100%;
+    }
+  }
+  &:active:not([disabled]){
+    color: #3a8ee6;
+    border-color: #3a8ee6;
+  }
+  &:disabled{
+    cursor: not-allowed;
+  }
+  .btn_inner{
+    padding: 12px 18px;
+    display: inline-block;
+
+  }
+}
+

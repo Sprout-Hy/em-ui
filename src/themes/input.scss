@@ -1,0 +1,24 @@
+@import "input.var";
+
+
+.el-input-shell{
+  width: $input-shell-width;
+  font-size: 14px;
+  box-sizing: border-box;
+  overflow: hidden;
+  .el-input{
+    width: 100%;
+    font-size: inherit;
+    color: inherit;
+    border-radius: 5px;
+    border: $input-border-normal;
+    height: $input-height-normal;
+    padding: 0 8px;
+    margin:0;
+    outline: none;
+    box-sizing: border-box;
+  }
+  .el-input:focus{
+    border-color: #33a0ff;
+  }
+}
