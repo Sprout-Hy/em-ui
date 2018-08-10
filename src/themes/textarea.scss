@@ -3,17 +3,18 @@
 
 .em-textarea-shell{
   display: inline-block;
-  width: 400px;
+  width: $textarea-shell-width;
+  font-size: inherit;
   .em-textarea{
+    font-size: inherit;
     width: 100%;
     display: block;
     resize: vertical;
-    min-height: 90px;
     padding: 10px 8px;
     box-sizing: border-box;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+    -webkit-border-radius: $textarea-border-radius;
+    -moz-border-radius: $textarea-border-radius;
+    border-radius: $textarea-border-radius;
     outline: 0;
     //text-align: left;
     &:focus{

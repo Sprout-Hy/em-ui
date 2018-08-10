@@ -37,7 +37,7 @@ export class AppComponent {
   }
 
   public textareaChange(){
-
+    console.log(this.ngmodel.textNative)
   }
 
 }

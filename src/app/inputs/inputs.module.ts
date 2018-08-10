@@ -4,6 +4,7 @@ import { InputComponent } from './input/input.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputComponent2} from './fmct';
 import { TextareaComponent } from './textarea/textarea.component';
+import { CheckboxComponent } from './checkbox/checkbox.component';
 
 @NgModule({
   imports: [
@@ -16,10 +17,12 @@ import { TextareaComponent } from './textarea/textarea.component';
     InputComponent,
     InputComponent2,
     TextareaComponent,
+    CheckboxComponent,
   ],
   exports:[
     InputComponent,
     TextareaComponent,
+    CheckboxComponent
   ],
   entryComponents:[
     InputComponent,

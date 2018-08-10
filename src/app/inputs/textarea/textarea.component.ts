@@ -1,7 +1,7 @@
 import {Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Provider} from '@angular/core/src/di';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {DomSanitizer} from '@angular/platform-browser';
+import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 
 const noop = () => {
 };
@@ -22,11 +22,11 @@ const noop = () => {
   template: `
     <div class="em-textarea-shell">
       <textarea 
-        [style]="setStyle()"
+        [style]="secureStyle"
         [class]=" 'em-textarea ' +className"
         [class.res-both]="resizeBoth"
         [placeholder]="placeholder"
-        [ngModel]="value"
+        [(ngModel)]="value"
         [disabled]="disabled"
         [readonly]="redaonly"
         (focus)="onFocusHandel($event)"
@@ -43,11 +43,12 @@ const noop = () => {
 export class TextareaComponent implements OnInit,ControlValueAccessor {
   private _onTouchedCallback: () => void = noop;
   private _onChangeCallback: (_: any) => void = noop;
-
   private _value:any='';
   private _disabled: boolean = false;
   private _readonly: boolean = false;
 
+  /** textarea  在进行resize时会触发多种dom事件，不能使用setStyle*/
+  public  secureStyle:SafeStyle = '';
   /**
    * inputs
    */
@@ -102,9 +103,12 @@ export class TextareaComponent implements OnInit,ControlValueAccessor {
   }
 
   ngOnInit() {
-    let val = this.textareaRef.nativeElement.value;
-    console.log('val=> length is '+val.length);
-    console.log(this)
+    /*let val = this.textareaRef.nativeElement.value;
+    console.log('val=> length is '+val.length);*/
+    //this.nativeStyle = this.setStyle().toString()
+
+    this.secureStyle = this.setStyle();
+
   }
 
   /**
@@ -132,7 +136,7 @@ export class TextareaComponent implements OnInit,ControlValueAccessor {
   /** 返回过滤后的css*/
   public setStyle(){
 
-    return this.filtration.bypassSecurityTrustStyle(this.nativeStyle)
+    return this.filtration.bypassSecurityTrustStyle(this.nativeStyle + this.textareaRef.nativeElement.style)
   }
 
   /**
@@ -142,12 +146,11 @@ export class TextareaComponent implements OnInit,ControlValueAccessor {
   public onFocusHandel(event):void{
     this._onTouchedCallback();
     this.emFocus.emit(event);
-    console.log(this.filtration.bypassSecurityTrustStyle(this.nativeStyle))
+    /*console.log(this.filtration.bypassSecurityTrustStyle(this.nativeStyle))*/
   }
 
   public onClickHandle(event):void{
-    /*this.emClick.emit(event);
-    console.log('111')*/
+    this.emClick.emit(event);
   }
 
   public onBlurHandle(event):void{

@@ -56,14 +56,14 @@ export class ButtonComponent implements OnInit,AfterViewInit {
    */
   public handleClick(event){
     this.emClick.emit(event);
-
   }
 
+  /**
+   * filter style string.
+   */
   public setStyle():SafeStyle{
 
-    /**
-     * filter style string.
-     */
+    console.log(11);
     return this.filtration.bypassSecurityTrustStyle(this.emStyle);
 
   }

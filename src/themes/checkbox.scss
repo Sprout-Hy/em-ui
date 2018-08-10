@@ -1,0 +1,53 @@
+@import "checkbox.var";
+
+
+.el-check-shell{
+  display: inline-block;
+  user-select: none;
+  position: relative;
+  cursor: pointer;
+  box-sizing: border-box;
+  .em-check{
+    display: none;
+    visibility: hidden;
+    height: 0;
+    width: 0;
+  }
+  .check-delegate{
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: $checkbox-height-width;
+    width: $checkbox-height-width;
+    border: 1px solid #ccc;
+    -webkit-border-radius: $checkbox-border-radius;
+    -moz-border-radius: $checkbox-border-radius;
+    border-radius: $checkbox-border-radius;
+    background-color: inherit;/*transform:  scale(5);*/
+
+    transition: background-color $checkbox-bcColor-transition-duration ease-in-out;
+    .tiny-icon{
+      display: inline-block;
+      width: 7px;
+      height: 3px;
+      border-bottom: 1px solid #fff;
+      border-left: 1px solid #fff;
+      transform: rotate(-45deg);
+      position: relative;
+      top: -1px;
+    }
+    &:hover{
+      border-color: $checkbox-border-hover-color;
+    }
+
+  }
+  input:checked ~ .check-delegate{
+    background-color: $checkbox-border-checked-background-color;
+    border-color: $checkbox-border-checked-border-color;
+    transition: background-color $checkbox-bcColor-transition-duration ease-in-out;
+  }
+
+
+}

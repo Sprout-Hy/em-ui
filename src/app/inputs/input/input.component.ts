@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
 import {ControlValueAccessor, FormBuilder,  NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Provider} from '@angular/core/src/di';
-import {DomSanitizer} from '@angular/platform-browser';
+import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 
  const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR:Provider = {
   provide:NG_VALUE_ACCESSOR,
@@ -22,7 +22,7 @@ const noop = () => {
   ],
   template:
   `
-    <div class="em-input-shell" [style]="setStyle()">
+    <div class="em-input-shell" [style]="secureStyle">
       <input
         #nativeInput
         [type]="nativeType"
@@ -33,6 +33,7 @@ const noop = () => {
         [(ngModel)]="value"
         [disabled]="disabled"
         [readonly]="redaonly"
+        [id]="nativeId"
         (click)="handleClick($event)"
         (change)="inputChangeHandle($event)"
         (blur)="inputBlurHandle($event)"
@@ -49,11 +50,11 @@ const noop = () => {
 export class InputComponent implements OnInit, ControlValueAccessor,AfterViewInit{
   private _onTouchedCallback: () => void = noop;
   private _onChangeCallback: (_: any) => void = noop;
-
   private _value:any='';
   private _disabled: boolean = false;
   private _readonly: boolean = false;
 
+  public secureStyle:SafeStyle = '';//过滤后的css，不要直接使用setStyle方法，声明周期会付款触发setStyle
   /**
    * -----------------
    * 输入属性 @Input
@@ -64,6 +65,7 @@ export class InputComponent implements OnInit, ControlValueAccessor,AfterViewIni
   @Input('style') nativeStyle:string ='';
   @Input('class') className:string = '';
   @Input('name') nativeName:string = '';
+  @Input('id') nativeId:string = '';
 
   /**  @Input disabled */
   @Input()
@@ -124,6 +126,7 @@ export class InputComponent implements OnInit, ControlValueAccessor,AfterViewIni
   }
   ngOnInit() {
 
+    this.secureStyle = this.setStyle();
   }
 
   ngAfterViewInit(){
@@ -167,6 +170,8 @@ export class InputComponent implements OnInit, ControlValueAccessor,AfterViewIni
   /** 返回过滤后的css*/
   public setStyle(){
 
+  console.log('__setStyle__');
+  console.log(new Date().getTime());
     return this.filtration.bypassSecurityTrustStyle(this.nativeStyle)
   }
 

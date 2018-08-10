@@ -1,0 +1,16 @@
+/*checkbox height && width*/
+$checkbox-height-width:14px;
+
+/* checkbox-border-radius*/
+$checkbox-border-radius:2px;
+
+/*checkbox 边框颜色*/
+$checkbox-border-color:#ccc;
+$checkbox-border-hover-color:#3a8ee6;
+
+/*选中状态的背景色和边框颜色*/
+$checkbox-border-checked-background-color:#3a8ee6;
+$checkbox-border-checked-border-color:#3a8ee6;
+
+/*背景色变化函数*/
+$checkbox-bcColor-transition-duration: 0.2s
