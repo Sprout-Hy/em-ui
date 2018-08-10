@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { InputComponent } from './input/input.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputComponent2} from './fmct';
+import { TextareaComponent } from './textarea/textarea.component';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import {InputComponent2} from './fmct';
   declarations: [
     InputComponent,
     InputComponent2,
+    TextareaComponent,
   ],
   exports:[
     InputComponent,

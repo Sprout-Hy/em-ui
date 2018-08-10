@@ -1,11 +1,17 @@
 @import "input.var";
 
 
-.el-input-shell{
+.em-input-shell{
   width: $input-shell-width;
   font-size: 14px;
   box-sizing: border-box;
   overflow: hidden;
+
+  &:disabled{
+    user-select: none;
+    color: #d8dce5;
+  }
+
   .el-input{
     width: 100%;
     font-size: inherit;
@@ -17,8 +23,20 @@
     margin:0;
     outline: none;
     box-sizing: border-box;
+    &:disabled{
+      background-color: $input-disabled_background-color;
+      cursor: not-allowed;
+      user-select: none;
+    }
+
+    &.normal:focus{
+      border-color: #33a0ff;
+    }
   }
-  .el-input:focus{
+  /*.el-input:focus{
     border-color: #33a0ff;
-  }
+  }*/
+
+
+
 }

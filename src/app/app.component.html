@@ -4,10 +4,11 @@
     ui库
   </h4>
   <div class="components">
-    <em-button (emClick)="clickHandle()" class="" [emDisabled]="isDisabledButton">默认按钮</em-button>
+    <em-button (emClick)="clickHandle()" class="" [disabled]="isDisabledButton"  >默认按钮</em-button>
     <form [formGroup]="formModule">
       <p>
-        <em-input type="" formControlName="text"></em-input>
+        <em-input type="" formControlName="text"  (emClick)="inputClickHandle($event)" (emChange)="valueChange()" [disabled]="true"></em-input>
+
       </p>
     </form>
 

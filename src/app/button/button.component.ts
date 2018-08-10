@@ -5,7 +5,7 @@ import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
   selector: 'em-button',
   template: `
     <button [class]=" 'em-button ' + ' ' + className " (click)="handleClick($event)"
-    [disabled]="emDisabled"
+    [disabled]="disabled"
     [style]=" emStyle?setStyle():'' "
     >
       <span class="btn_inner">
@@ -21,9 +21,21 @@ export class ButtonComponent implements OnInit,AfterViewInit {
   /* @Input*/
   @Input() size:string = '';
   @Input() color:string = '';
-  @Input() emDisabled:boolean = false;
+ /* @Input() emDisabled:boolean = false;*/
   @Input('style') emStyle:string = '';
   @Input('class') className:string = '';
+
+  private _disabled:boolean = false;
+
+  /** set property disabled*/
+  @Input('disabled')
+  set disabled(val:any){
+    this._disabled !=val? this._disabled =val:null;
+  }
+  get disabled():any{
+    return this._disabled;
+  }
+
   @Output() emClick:EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private filtration:DomSanitizer,private ele:ElementRef) {
@@ -44,7 +56,7 @@ export class ButtonComponent implements OnInit,AfterViewInit {
    */
   public handleClick(event){
     this.emClick.emit(event);
-    console.log(event)
+
   }
 
   public setStyle():SafeStyle{

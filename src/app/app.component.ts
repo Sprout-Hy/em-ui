@@ -12,12 +12,23 @@ export class AppComponent {
   public formModule:FormGroup;
   constructor(private fb:FormBuilder){
     this.formModule = this.fb.group({
-      text:['12312',[]],
+      text:['',[]],
     })
   }
 
   public clickHandle(){
     console.log('click event');
    /* this.isDisabledButton = true*/
+    this.formModule.get('text').setValue((Math.random()*100).toString().slice(0,5))
   }
+
+
+  public inputClickHandle(e){
+
+  }
+
+  public valueChange(){
+
+  }
+
 }
