@@ -1,9 +1,9 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, forwardRef, Input, OnChanges, OnInit, Output, ViewChild} from '@angular/core';
-import {ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {AfterViewInit, Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
+import {ControlValueAccessor, FormBuilder,  NG_VALUE_ACCESSOR} from '@angular/forms';
 import {Provider} from '@angular/core/src/di';
 import {DomSanitizer} from '@angular/platform-browser';
 
-export const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR:Provider = {
+ const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR:Provider = {
   provide:NG_VALUE_ACCESSOR,
   useExisting:forwardRef(()=>
     InputComponent
@@ -26,19 +26,24 @@ const noop = () => {
       <input
         #nativeInput
         [type]="nativeType"
+        [name]="nativeName"
         [class]="  'el-input '+ className "
         [class.normal]=" !redaonly&&!disabled "
         [placeholder]="placeholder"
-        [ngModel]="value" 
+        [(ngModel)]="value"
         [disabled]="disabled"
         [readonly]="redaonly"
         (click)="handleClick($event)"
         (change)="inputChangeHandle($event)"
         (blur)="inputBlurHandle($event)"
+        (focus)="inputFocusHandle($event)"
       />
     </div>
 
   `,
+  host:{
+    '(change)':'_onChangeCallback'
+  },
   styleUrls: ['./input.component.scss']
 })
 export class InputComponent implements OnInit, ControlValueAccessor,AfterViewInit{
@@ -56,10 +61,9 @@ export class InputComponent implements OnInit, ControlValueAccessor,AfterViewIni
    */
   @Input('type') nativeType:'text'|'number'|'password' = 'text';
   @Input() placeholder:string = '';
-  @Input('value') nativeValue:any;
   @Input('style') nativeStyle:string ='';
   @Input('class') className:string = '';
-  // @Input('formControlName') formControl:FormControl = new FormControl();
+  @Input('name') nativeName:string = '';
 
   /**  @Input disabled */
   @Input()
@@ -73,7 +77,11 @@ export class InputComponent implements OnInit, ControlValueAccessor,AfterViewIni
 
   @Input()
   set value(val:any){
-    val!=this._value? this._value = val:null;
+    /*val!=this._value? this._value = val:null;*/
+    if ( val!=this._value) {
+      this._value = val;
+      this._onChangeCallback(val);//更新组件外formControl
+    }
   }
   get value(){
     return this._value;
@@ -82,6 +90,7 @@ export class InputComponent implements OnInit, ControlValueAccessor,AfterViewIni
   @Input()
   set readonly(val:any){
     this._readonly !=val?this._readonly = val:null;
+
   }
 
   get redaonly():any{
@@ -92,7 +101,7 @@ export class InputComponent implements OnInit, ControlValueAccessor,AfterViewIni
   /** 组件内部的input*/
   @ViewChild('nativeInput') inputRef:ElementRef;
 
-  private protectedValue:any = '';
+ /* private protectedValue:any = '';*/
 
   /**
    * -------------------------
@@ -101,14 +110,16 @@ export class InputComponent implements OnInit, ControlValueAccessor,AfterViewIni
    */
   @Output() emClick:EventEmitter<any> = new EventEmitter<any>();  //click handle
   @Output() emChange:EventEmitter<any> = new EventEmitter<any>(); //valueChange handle
-  @Output() emBlur :EventEmitter<any> = new EventEmitter<any>(); //lose focus :blur
-
+  @Output() emBlur :EventEmitter<any> = new EventEmitter<any>(); //blur
+  @Output() emFocus :EventEmitter<any> = new EventEmitter<any>();
   /**
    *
    * @param {FormBuilder} fb formBuilder
    * @param {DomSanitizer} filtration 代码合法性过滤，angular官方
    */
-  constructor(private fb:FormBuilder,private filtration:DomSanitizer) {
+  constructor(
+    private fb:FormBuilder,
+    private filtration:DomSanitizer) {
 
   }
   ngOnInit() {
@@ -179,9 +190,20 @@ export class InputComponent implements OnInit, ControlValueAccessor,AfterViewIni
 
   }
 
-
+  /**
+   * onBlur handle.emit to parentComponent
+   * @param event
+   */
   public inputBlurHandle(event):void{
     this.emBlur.emit(event)
   }
 
+  /**
+   * 获取焦点时触发 _onTouchedCallback
+   * @param event
+   */
+  public inputFocusHandle(event):void{
+    this._onTouchedCallback();
+    this.emFocus.emit(event)
+  }
 }

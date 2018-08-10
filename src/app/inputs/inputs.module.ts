@@ -19,6 +19,7 @@ import { TextareaComponent } from './textarea/textarea.component';
   ],
   exports:[
     InputComponent,
+    TextareaComponent,
   ],
   entryComponents:[
     InputComponent,

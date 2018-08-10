@@ -46,7 +46,7 @@ export class ButtonComponent implements OnInit,AfterViewInit {
   }
 
   ngAfterViewInit(){
-    console.log(this.ele.nativeElement);
+    /*console.log(this.ele.nativeElement);*/
    /* this.removeNgTag(this.ele.nativeElement);*/
   }
 

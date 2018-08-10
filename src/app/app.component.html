@@ -6,12 +6,19 @@
   <div class="components">
     <em-button (emClick)="clickHandle()" class="" [disabled]="isDisabledButton"  >默认按钮</em-button>
     <form [formGroup]="formModule">
-      <p>
-        <em-input type="" formControlName="text"  (emClick)="inputClickHandle($event)" (emChange)="valueChange()" [disabled]="true"></em-input>
-
-      </p>
+      <div class="container " style="text-align: center; padding: 20px">
+        <em-input type=""  formControlName="text"  (emClick)="inputClickHandle($event)" (emChange)="valueChange($event)" placeholder="请输入" ></em-input>
+      </div>
     </form>
 
+    <em-input type="" name ="text2"    [(ngModel)]="ngmodel.text" (emChange)="valueChange($event)" placeholder="请输入" ></em-input>
+
+
+    <div>
+      <em-textarea (emChange)="textareaChange()" [(ngModel)]="ngmodel.textNative"></em-textarea>
+      <br>
+      <textarea name="" id="" cols="30" rows="10" style="resize: vertical"></textarea>
+    </div>
 
   </div>
 </div>

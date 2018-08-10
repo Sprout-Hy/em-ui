@@ -9,17 +9,20 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 export class AppComponent {
   public isDisabledButton:boolean =false;
   title = 'app';
+  public ngmodel:any = {text:'',textNative:''};
   public formModule:FormGroup;
   constructor(private fb:FormBuilder){
     this.formModule = this.fb.group({
       text:['',[]],
+      areaL:['',[]]
     })
   }
 
   public clickHandle(){
     console.log('click event');
    /* this.isDisabledButton = true*/
-    this.formModule.get('text').setValue((Math.random()*100).toString().slice(0,5))
+    this.formModule.get('text').setValue((Math.random()*100).toString().slice(0,5));
+    console.log(this.formModule.get('text').touched)
   }
 
 
@@ -27,7 +30,13 @@ export class AppComponent {
 
   }
 
-  public valueChange(){
+  public valueChange(event){
+    console.log(event.target);
+    console.log(this.formModule.value);
+    console.log(this.ngmodel)
+  }
+
+  public textareaChange(){
 
   }
 
