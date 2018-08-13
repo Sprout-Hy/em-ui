@@ -1,17 +1,40 @@
 @import "data-calendar.var";
 
-.calendar-wrap{
-  position: absolute;
-  top: calc(100% - 0px);
-  left: 0;
-  height: 400px;
-  width: 400px;
-  z-index: 9;
-  border: 1px solid #5a5d64;
-  background-color: red;
-}
-
 .date-calendar-wrap{
+  .cur-p{
+    cursor: pointer;
+  }
   display: inline-block;
   position: relative;
+  .calendar-wrap{
+    position: absolute;
+    top: calc(100% - 0px);
+    left: 0;
+    height: 400px;
+    width: 400px;
+    z-index: 9;
+
+    background-color: #fff;
+    padding: 3px 0;
+  }
+
+  .calendarInner{
+    opacity: 1;
+    height: 100%;
+    border: $data-calendar-border;
+    -webkit-border-radius: $data-calendar-border-radius;
+    -moz-border-radius: $data-calendar-border-radius;
+    border-radius: $data-calendar-border-radius;
+  }
+
+  .calendar-head{
+    margin: 10px;
+    min-height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+  }
+
 }
+
