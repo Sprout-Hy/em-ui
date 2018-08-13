@@ -5,6 +5,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputComponent2} from './fmct';
 import { TextareaComponent } from './textarea/textarea.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
+import { RadioComponent } from './radio/radio.component';
+import { DateCalendarComponent } from './date-calendar/date-calendar.component';
 
 @NgModule({
   imports: [
@@ -18,11 +20,15 @@ import { CheckboxComponent } from './checkbox/checkbox.component';
     InputComponent2,
     TextareaComponent,
     CheckboxComponent,
+    RadioComponent,
+    DateCalendarComponent,
   ],
   exports:[
     InputComponent,
     TextareaComponent,
-    CheckboxComponent
+    CheckboxComponent,
+    RadioComponent,
+    DateCalendarComponent
   ],
   entryComponents:[
     InputComponent,

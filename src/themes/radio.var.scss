@@ -1,0 +1,15 @@
+/*radio 高度and 宽度*/
+$radio-height-width: 14px;
+
+/*radio 边框颜色*/
+$radio-border-color-normal: #ccc;
+
+/*radio 背景色*/
+$radio-background-color: #3a8ee6;
+
+/*激活状态边框颜色*/
+$radio-hover-border-color: $radio-background-color;
+
+/*切换动画 时间 */
+
+$radio-checked-transition-duration: 0.15s;

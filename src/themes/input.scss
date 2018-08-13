@@ -6,8 +6,8 @@
   display: inline-block;
   font-size: 14px;
   box-sizing: border-box;
-  overflow: hidden;
-
+ /* overflow: hidden;*/
+  position: relative;
   &:disabled{
     user-select: none;
     color: #d8dce5;

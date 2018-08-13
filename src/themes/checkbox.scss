@@ -7,14 +7,19 @@
   position: relative;
   cursor: pointer;
   box-sizing: border-box;
+  line-height: 1;
+  vertical-align: middle;
   .em-check{
     display: none;
     visibility: hidden;
     height: 0;
     width: 0;
+    position: absolute;
+    z-index: -2;
   }
   .check-delegate{
     box-sizing: border-box;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -25,7 +30,8 @@
     -webkit-border-radius: $checkbox-border-radius;
     -moz-border-radius: $checkbox-border-radius;
     border-radius: $checkbox-border-radius;
-    background-color: inherit;/*transform:  scale(5);*/
+    background-color: inherit;
+    /*transform:  scale(5);*/
 
     transition: background-color $checkbox-bcColor-transition-duration ease-in-out;
     .tiny-icon{
@@ -49,5 +55,13 @@
     transition: background-color $checkbox-bcColor-transition-duration ease-in-out;
   }
 
+  .check-text-label{
+    display: inline-block;
+    color: initial;
+    font-size: inherit;
+  }
 
+}
+em-checkbox + * {
+  margin-left: 4px;
 }

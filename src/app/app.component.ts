@@ -14,7 +14,8 @@ export class AppComponent {
   constructor(private fb:FormBuilder){
     this.formModule = this.fb.group({
       text:['',[]],
-      areaL:['',[]]
+      areaL:['',[]],
+      check:[true],
     })
   }
 
@@ -38,6 +39,16 @@ export class AppComponent {
 
   public textareaChange(){
     console.log(this.ngmodel.textNative)
+  }
+
+  public checkChange(event){
+   /* console.log('__checkChange__');*/
+    console.log(this.formModule.value);
+    /*console.log(event.target.checked)*/
+  }
+
+  public radioChangeHandle(event){
+    console.log(event.target.value)
   }
 
 }

@@ -9,20 +9,26 @@
       <div class="container " style="text-align: center; padding: 20px">
         <em-input type=""  formControlName="text"  (emClick)="inputClickHandle($event)" (emChange)="valueChange($event)" placeholder="请输入" ></em-input>
       </div>
+
+      <label >
+        <em-checkbox (emChange)="checkChange( $event)" formGroupName="check" ></em-checkbox>
+        <span style="vertical-align: middle">12312</span>
+      </label>
     </form>
 
-    <em-input type="" name ="text2"    [(ngModel)]="ngmodel.text" (emChange)="valueChange($event)" placeholder="请输入" ></em-input>
 
 
     <div>
       <em-textarea (emChange)="textareaChange()" name="ddasd" [(ngModel)]="ngmodel.textNative"></em-textarea>
       <br>
       <label >
-
-        <em-checkbox></em-checkbox>
-
+        <em-radio [name]="'testradio'" [checked]="true" (emChange)="radioChangeHandle($event)" [disabled]="true"></em-radio>
+        <span class="label">123</span>
       </label>
 
+      <br>
+
+      <em-dateCalendar placeholder="123"></em-dateCalendar>
 
     </div>
 

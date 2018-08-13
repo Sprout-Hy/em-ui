@@ -5,7 +5,7 @@ import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 
 const noop = () => {
 };
- const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR:Provider = {
+ const CUSTOM_TEXTAREA_CONTROL_VALUE_ACCESSOR:Provider = {
   provide:NG_VALUE_ACCESSOR,
   useExisting:forwardRef(()=>
     TextareaComponent
@@ -17,7 +17,7 @@ const noop = () => {
 @Component({
   selector: 'em-textarea',
   providers:[
-    CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR
+    CUSTOM_TEXTAREA_CONTROL_VALUE_ACCESSOR
   ],
   template: `
     <div class="em-textarea-shell">
@@ -28,16 +28,19 @@ const noop = () => {
         [placeholder]="placeholder"
         [(ngModel)]="value"
         [disabled]="disabled"
-        [readonly]="redaonly"
+        [readonly]="readonly"
         (focus)="onFocusHandel($event)"
         (click)="onClickHandle($event)"
         (change)="onValueChangeHandle($event)"
-        (blur)="onValueChangeHandle($event)"
+        (blur)="onBlurHandle($event)"
         #textarea 
         
       ></textarea>
     </div>
   `,
+  host:{
+    '(change)':'_onChangeCallback'
+  },
   styleUrls: ['./textarea.component.scss']
 })
 export class TextareaComponent implements OnInit,ControlValueAccessor {
@@ -82,7 +85,7 @@ export class TextareaComponent implements OnInit,ControlValueAccessor {
     this._readonly !=val?this._readonly = val:null;
   }
 
-  get  redaonly():any{
+  get  readonly():any{
     return this._readonly
   }
 

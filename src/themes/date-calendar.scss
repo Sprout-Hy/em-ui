@@ -1,0 +1,17 @@
+@import "data-calendar.var";
+
+.calendar-wrap{
+  position: absolute;
+  top: calc(100% - 0px);
+  left: 0;
+  height: 400px;
+  width: 400px;
+  z-index: 9;
+  border: 1px solid #5a5d64;
+  background-color: red;
+}
+
+.date-calendar-wrap{
+  display: inline-block;
+  position: relative;
+}
