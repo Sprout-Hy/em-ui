@@ -1,8 +1,17 @@
 @import "data-calendar.var";
 
 .date-calendar-wrap{
-  .cur-p{
+  font-size: 12px;
+  .cur-p,.calendar-btn,button{
     cursor: pointer;
+  }
+  button,.calendar-btn{
+    border: 0;
+    -webkit-box-shadow: none ;
+    -moz-box-shadow: none ;
+    box-shadow: none ;
+    background-color: inherit;
+    outline: none;
   }
   display: inline-block;
   position: relative;
@@ -10,8 +19,8 @@
     position: absolute;
     top: calc(100% - 0px);
     left: 0;
-    height: 400px;
-    width: 400px;
+   /* height: 400px;
+    width: 400px;*/
     z-index: 9;
 
     background-color: #fff;
@@ -33,6 +42,83 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+  }
+
+  .icon-btn{
+    color: #A1A2A3;
+  }
+  /*.next-btns{
+    padding-right: 10px;
+  }
+  .prev-btns{
+    padding-left: 10px;
+  }*/
+  .calendar-body{
+    padding: 10px;
+    min-height: 90px;
+  }
+  table.tab-calendar{
+    border: 0;
+    width: 100%;
+    border-collapse: collapse;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    th{
+      color: #333;
+      padding: 4px;
+      font-weight: normal;
+      border-bottom: 1px solid #cccccc;
+      font-size: 14px;
+      .ck-h-item{
+        display: inline-block;
+        height: 40px;
+        width: 40px;
+        line-height: 40px;
+      }
+    }
+    .ck-td{
+      height: 40px;
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ck-td-item{
+      display: block;
+      color: #c0c4cc;
+      cursor: pointer;
+      width: 22px;
+      height: 22px;
+      line-height: 22px;
+      vertical-align: middle;
+      position: relative;
+      top: 0;
+      transition: font-size,top 0.15s ease-in-out ;
+      &:not(.ck-day):hover{
+        color: #33a9ff;
+        font-weight: 500;
+        font-size: 18px;
+        top: -3px;
+        transition: font-size, top 0.15s ease-in-out ;
+      }
+      &.ck-day{
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+        background-color: #33a0ff;
+        color: #fff!important;
+      }
+
+    }
+
+
+    .current-m{
+      color: #333;
+    }
+
 
   }
 

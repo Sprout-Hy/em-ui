@@ -161,8 +161,8 @@ export class InputComponent implements OnInit, ControlValueAccessor, AfterViewIn
   /** 返回过滤后的css*/
   public setStyle() {
 
-    console.log('__setStyle__');
-    console.log(new Date().getTime());
+  /*  console.log('__setStyle__');
+    console.log(new Date().getTime())*/;
     return this.filtration.bypassSecurityTrustStyle(this.nativeStyle);
   }
 
@@ -197,5 +197,18 @@ export class InputComponent implements OnInit, ControlValueAccessor, AfterViewIn
   public inputFocusHandle(event): void {
     this._onTouchedCallback();
     this.emFocus.emit(event);
+  }
+
+  /**
+   * 用于子类更新数据
+   * @param val
+   */
+  public setProtectedValue(val:any) {
+    this._value = val;
+    this._onChangeCallback(val)
+  }
+
+  public getProtectedValue(){
+    return this._value
   }
 }
