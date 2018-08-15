@@ -16,6 +16,7 @@ export class AppComponent {
       text:['',[]],
       areaL:['',[]],
       check:[true],
+      date:['']
     })
   }
 
@@ -49,6 +50,12 @@ export class AppComponent {
 
   public radioChangeHandle(event){
     console.log(event.target.value)
+  }
+
+  public dateChangaHandle(event){
+    console.log("__dateChangaHandle__");
+    console.log(event)
+    console.log(this.formModule.value)
   }
 
 }

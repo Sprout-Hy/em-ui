@@ -62,7 +62,6 @@ export class InputComponent implements OnInit, ControlValueAccessor, AfterViewIn
   @Input() set disabled(val: any) {
     this._disabled = val;
   }
-
   get disabled(): any {
     return this._disabled;
   }
@@ -75,7 +74,6 @@ export class InputComponent implements OnInit, ControlValueAccessor, AfterViewIn
       this._onChangeCallback(val);//更新组件外formControl
     }
   }
-
   get value() {
     return this._value;
   }
@@ -179,6 +177,7 @@ export class InputComponent implements OnInit, ControlValueAccessor, AfterViewIn
    * @param event
    */
   public inputChangeHandle(event): void {
+    console.log(event.target.value)
     this.emChange.emit(event);
   }
 

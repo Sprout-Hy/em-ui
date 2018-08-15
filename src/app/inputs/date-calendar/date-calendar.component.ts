@@ -1,10 +1,10 @@
-import {Component, Directive, ElementRef, forwardRef, HostListener, OnInit, Provider, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, Provider, ViewChild} from '@angular/core';
 import {InputComponent} from '../input/input.component';
-import {DomSanitizer} from '@angular/platform-browser';
-import {NG_VALUE_ACCESSOR} from '@angular/forms';
+import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR: Provider = {
-  provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => InputComponent), multi: true
+  provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DateCalendarComponent), multi: true
 };
 
 const noop = () => {
@@ -24,7 +24,7 @@ const noop = () => {
           [placeholder]="placeholder"
           [(ngModel)]="value"
           [disabled]="disabled"
-          [readonly]="true"
+          [readonly]="false"
           [id]="nativeId"
           (click)="calendarInputClick($event)"
           (change)="inputChangeHandle($event)"
@@ -35,7 +35,7 @@ const noop = () => {
       <div class="calendar-wrap" *ngIf="isCalendar" #calendarSub>
 
         <div class="calendarInner">
-          <div class="calendar-head">
+          <div class="calendar-head" style="font-size: 14px">
               <span class=" prev-btns">
                 <button class="pre-year calendar-btn" (click)="toggleToPrevYear($event)">
                   <i class="icon-btn iconfont icon-prev-double" title="上一年度"></i>
@@ -96,22 +96,79 @@ const noop = () => {
 
   `, styleUrls: ['./date-calendar.component.scss']
 })
-export class DateCalendarComponent extends InputComponent implements OnInit {
+export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
+  private  _onTouchedCallback: () => void = noop;
+  private _onChangeCallback: (_: any) => void = noop;
+  private _value: any = '';
+  private _disabled: boolean = false;
+  private _readonly: boolean = false;
 
+  public secureStyle: SafeStyle = '';//过滤后的css，不要直接使用setStyle方法，
   public isCalendar: boolean = false; //是否显示日历（是否弹出）
 
   public current_select_time: DateTime_; //当前选中的日历
   public reveal_time: DateTime_; //当前显示的
   public calendar_list: Array<[CalendarDay_ []]>; //日历列表
 
+  /**
+   * -----------------
+   * 输入属性 @Input
+   * -----------------
+   */
+  @Input('type') nativeType: 'text' | 'number' | 'password' = 'text';
+  @Input() placeholder: string = '';
+  @Input('style') nativeStyle: string = '';
+  @Input('class') className: string = '';
+  @Input('name') nativeName: string = '';
+  @Input('id') nativeId: string = '';
 
- /* @ViewChild('inputSub') inputRefSub: ElementRef;*/
+  /**  @Input disabled */
+  @Input() set disabled(val: any) {
+    this._disabled = val;
+  }
+  get disabled(): any {
+    return this._disabled;
+  }
+
+
+  @Input() set value(val: any) {
+    /*val!=this._value? this._value = val:null;*/
+    if (val != this._value) {
+      this._value = val;
+      this._onChangeCallback(val);//更新组件外formControl
+    }
+  }
+
+  get value() {
+    return this._value;
+  }
+
+  @Input() set readonly(val: any) {
+    this._readonly != val ? this._readonly = val : null;
+
+  }
+
+  get readonly(): any {
+    return this._readonly;
+  }
+
+  /**
+   * -------------------------
+   * Output
+   * -------------------------
+   */
+  @Output() emClick: EventEmitter<any> = new EventEmitter<any>();  //click handle
+  @Output() emChange: EventEmitter<any> = new EventEmitter<any>(); //valueChange handle
+  @Output() emBlur: EventEmitter<any> = new EventEmitter<any>(); //blur
+  @Output() emFocus: EventEmitter<any> = new EventEmitter<any>();
+
+  @ViewChild('nativeInput') inputRef: ElementRef;
   @ViewChild('calendarSub') calendarDivSub: ElementRef;
 
   constructor(public filtration: DomSanitizer, private ele: ElementRef) {
-    super(filtration);
+    /*super(filtration);*/
 
-
+    this.secureStyle = this.setStyle();
   }
 
   ngOnInit() {
@@ -124,7 +181,7 @@ export class DateCalendarComponent extends InputComponent implements OnInit {
       year: now_time.getFullYear(), month: now_time.getMonth() + 1, day: now_time.getDate(), weekday: now_time.getDay(),
     };
 
-    this.calendarListInit();
+    this.calendarListInit();  //初始化日历
   }
 
   /**
@@ -194,23 +251,32 @@ export class DateCalendarComponent extends InputComponent implements OnInit {
     }
   }
 
+  private setComponentValue(value:any):void{
+    this.writeValue(value); //更新值
+    this._onChangeCallback(value); //onchange回调
+    this.emChange.emit(value) //触发外部组件的change时间
+  }
+
+
   /**
    * 输入框点击，弹出日历
    * @param event
    */
   public calendarInputClick(event) {
-    console.log(event.currentTarget);
-   /* console.log(event.target);*/
-    this.isCalendar = true;
-    let _date = new Date();
-    if (!this.getProtectedValue()) {
-      this.setProtectedValue( _date.toLocaleDateString())
-    }else{
+
+    this.isCalendar = true; //打开日历
+    let _date = new Date(); //获取当前时间
+    if (!this.inputRef.nativeElement.value) {
+      let value = _date.toLocaleDateString();
+
+      this.setComponentValue(value)  //更新组件 值
+
+    }else{ //空值时初始化日历
       try {
-        let date = new Date( this.getProtectedValue() );
+        let date = new Date( this.inputRef.nativeElement.value );
         let date_time:DateTime_ ={
           year:date.getFullYear(),
-          month:date.getMonth(),
+          month:date.getMonth()+1,
           day:date.getDate(),
           weekday:date.getDay(),
         };
@@ -224,29 +290,35 @@ export class DateCalendarComponent extends InputComponent implements OnInit {
 
     }
 
+    this.handleClick(event); //
+
+
   }
 
-  //
+  //日期选择事件
   public calendarItemCheck(data: CalendarDay_) {
-    /**
-     year:number,
-     month:number,
-     day:number,
-     weekday:number,
-     */
+
     let $date: DateTime_ = {
-      year: data.year, month: data.month, day: data.day, weekday: new Date(data.year + '/' + data.month + '/' + data.day).getDay()
+      year: data.year,
+      month: data.month,
+      day: data.day,
+      weekday: new Date(data.year + '/' + data.month + '/' + data.day).getDay()
     };
     console.log($date);
     this.current_select_time = $date;
 
-    this.setProtectedValue(this.current_select_time.year+'/'+this.current_select_time.month+'/'+this.current_select_time.day ); //更新值
+    let __value=this.current_select_time.year+'/'+this.current_select_time.month+'/'+this.current_select_time.day ; //更新值
+
+  /*  this.writeValue(__value); //更新值
+    this._onChangeCallback(__value); //onchange回调
+    this.emChange.emit(__value); //触发外部组件的change时间*/
+    this.setComponentValue(__value);  //更新组件 值
 
     this.isCalendar = false ; //关闭弹出层
 
   }
 
-  //下一月
+  //切换到下一月
   public toggleToNextMonth(event) {
     if (event && event.preventDefault) {
       event.preventDefault();
@@ -298,6 +370,71 @@ export class DateCalendarComponent extends InputComponent implements OnInit {
     this.reveal_time.month = 1;
     this.calendarListInit(); //更新日历视图
 
+  }
+
+  /** 返回过滤后的css*/
+  public setStyle() {
+
+    return this.filtration.bypassSecurityTrustStyle(this.nativeStyle);
+  }
+
+  /**
+   * click handle emit to parentComponent
+   * @param event
+   */
+  public handleClick(event: any) {
+    this.emClick.emit(event);
+  }
+
+  /**
+   * onChange handle.emit to parentComponent
+   * @param event
+   */
+  public inputChangeHandle(event): void {
+    console.log(event.target.value);
+    this.emChange.emit(event);
+  }
+
+  /**
+   * onBlur handle.emit to parentComponent
+   * @param event
+   */
+  public inputBlurHandle(event): void {
+    this.emBlur.emit(event);
+  }
+
+  /**
+   * 获取焦点时触发 _onTouchedCallback
+   * @param event
+   */
+  public inputFocusHandle(event): void {
+    this._onTouchedCallback();
+    this.emFocus.emit(event);
+  }
+
+
+  /**
+   * implementation ControlValueAccessor
+   * @writeValue //设置原生表单控件的值
+   */
+  writeValue(val: any): void {
+    this._value = val;
+  }
+
+  /**
+   * implementation ControlValueAccessor
+   * @registerOnChange //每次原生表单控件值更新时触发的回调函数
+   */
+  registerOnChange(fn: any) {
+    this._onChangeCallback = fn;
+  }
+
+  /**
+   * implementation ControlValueAccessor
+   * @registerOnTouched
+   * */
+  registerOnTouched(fn: any) {
+    this._onTouchedCallback = fn;
   }
 
 

@@ -13,7 +13,11 @@
       <label >
         <em-checkbox (emChange)="checkChange( $event)" formGroupName="check" ></em-checkbox>
         <span style="vertical-align: middle">12312</span>
+        <br>
       </label>
+
+      <em-dateCalendar placeholder="请输入时间" (emChange)="dateChangaHandle($event)" formControlName="date"></em-dateCalendar>
+
     </form>
 
 
@@ -28,7 +32,7 @@
 
       <br>
 
-      <em-dateCalendar placeholder=""></em-dateCalendar>
+
 
     </div>
 
