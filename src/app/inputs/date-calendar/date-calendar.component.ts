@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, Provider, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, Provider, Renderer2, ViewChild} from '@angular/core';
 import {InputComponent} from '../input/input.component';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
@@ -13,7 +13,7 @@ const noop = () => {
 
 @Component({
   selector: 'em-dateCalendar', providers: [CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR], template: `
-    <div class="date-calendar-wrap" >
+    <div class="date-calendar-wrap" #rootCalendar>
       <div class="em-input-shell" [style]="secureStyle">
         <input
           #nativeInput
@@ -33,7 +33,7 @@ const noop = () => {
         />
       </div>
       <div class="calendar-wrap" *ngIf="isCalendar" #calendarSub>
-
+        <i class="iconfont icon-close-sunken calendar-close" (click)="isCalendar = false" title="关闭"></i>
         <div class="calendarInner">
           <div class="calendar-head" style="font-size: 14px">
               <span class=" prev-btns">
@@ -164,8 +164,9 @@ export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
 
   @ViewChild('nativeInput') inputRef: ElementRef;
   @ViewChild('calendarSub') calendarDivSub: ElementRef;
-
-  constructor(public filtration: DomSanitizer, private ele: ElementRef) {
+  @ViewChild('rootCalendar') rootCalendar:ElementRef;
+ /* private element:ElementRef;*/
+  constructor(public filtration: DomSanitizer, private rende: Renderer2,private ele:ElementRef) {
     /*super(filtration);*/
 
     this.secureStyle = this.setStyle();
@@ -182,7 +183,39 @@ export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
     };
 
     this.calendarListInit();  //初始化日历
+
+    this.ele.nativeElement.onmouseleave= (event)=>{ //移出时关闭日历
+      this.isCalendar?this.isCalendar = false:null;
+    }
+
+
+
   }
+
+  public calendarClose(event){
+
+    let target:any = event;
+    if (target == this.rootCalendar.nativeElement) { //是否是根元素 #rootCalendar
+      return
+    }
+
+    /* if (!has(childNodes,target)){
+       this.isCalendar = false;
+     }*/
+    let parent = target.parentNode;
+    while (parent){
+      if (parent.className&&parent.className.search('date-calendar-wrap')>-1){
+
+        return
+      }
+      parent = parent.parentNode;
+      console.log(parent)
+    }
+    this.isCalendar = false;
+  }
+
+
+
 
   /**
    * 初始化日历
@@ -376,6 +409,7 @@ export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
   public setStyle() {
 
     return this.filtration.bypassSecurityTrustStyle(this.nativeStyle);
+
   }
 
   /**

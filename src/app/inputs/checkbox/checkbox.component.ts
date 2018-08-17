@@ -1,4 +1,4 @@
-import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {Provider} from '@angular/core/src/di';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR, CheckboxControlValueAccessor} from '@angular/forms';
@@ -10,49 +10,50 @@ const CUSTOM_CHECKBOX_CONTROL_VALUE_ACCESSOR:Provider = {
   ),
   multi:true
 };
-
-
 const noop = () => {
 };
 
 @Component({
   selector: 'em-checkbox',
   template: `
-    <div class="el-check-shell">
-      <label >
+    <div class="em-check-shell">
+      <label>
         <input
+          #inputChecked
           type="checkbox"
           hidden
           [class]=" 'em-check ' + className"
           [style]="secureStyle"
-          [name]="nativeName"
+          [attr.name]="nativeName"
           [id]="nativeId"
           [disabled]="disabled"
           [(ngModel)]="checked"
+          [checked]="checked"
           (change)="valueChangeHandle($event)"
-         
+
         >
         <!--图标-->
         <span class="check-delegate">
           <i class="tiny-icon"></i>
         </span>
       </label>
-      
+
 
     </div>
-   
+
   `,
   host:{
-    '(change)':'_onChangeCallback'
+    '(change)':'onChange'
   },
   providers:[
     CUSTOM_CHECKBOX_CONTROL_VALUE_ACCESSOR
   ],
   styleUrls: ['./checkbox.component.scss']
 })
-export class CheckboxComponent implements OnInit,ControlValueAccessor {
-  private _onTouchedCallback: () => void = noop;
-  private _onChangeCallback: (_: any) => void = noop;
+export class CheckboxComponent implements OnInit,ControlValueAccessor
+{
+  private onTouched: () => void = noop;
+  private onChange: (_: any) => void = noop;
   private _value:any =null;
   private _disabled: boolean = false;
 
@@ -80,17 +81,17 @@ export class CheckboxComponent implements OnInit,ControlValueAccessor {
   // value
   @Input()
   set checked(val:any){
-
+    console.log(val);
     if (this._value != val){
       this._value = val;
-      console.log(val);
-      this._onChangeCallback(val);
+      this.onChange(val);
     }
   }
 
   get checked(){
     return this._value
   }
+
 
   /**
    * -------------------------
@@ -100,7 +101,9 @@ export class CheckboxComponent implements OnInit,ControlValueAccessor {
   @Output() emClick:EventEmitter<any> = new EventEmitter<any>();  //click handle
   @Output() emChange:EventEmitter<any> = new EventEmitter<any>(); //valueChange handle
 
-  constructor(private filtration: DomSanitizer) {
+
+  @ViewChild('inputChecked') checkRef:ElementRef;
+  constructor(private filtration: DomSanitizer,private _renderer:Renderer2, private _elementRef:ElementRef) {
 
   }
 
@@ -136,22 +139,26 @@ export class CheckboxComponent implements OnInit,ControlValueAccessor {
    */
   writeValue(val:any):void {
     this._value = val;
+  /*  this._renderer.setProperty(this._elementRef.nativeElement, 'checked', val == this._elementRef.nativeElement.value);*/
   }
   /**
    * implementation ControlValueAccessor
    * @registerOnChange //每次原生表单控件值更新时触发的回调函数
    */
   registerOnChange(fn: any){
-    this._onChangeCallback = fn;
+    this.onChange = fn;
+
   }
   /**
    * implementation ControlValueAccessor
    * @registerOnTouched
    * */
   registerOnTouched(fn: any){
-    this._onTouchedCallback = fn
+    this.onTouched = fn
   }
 
+  setDisabledState(){
 
+  }
 
 }

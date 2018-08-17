@@ -122,5 +122,16 @@
 
   }
 
+  /*关闭按钮*/
+  .calendar-close{
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: $calendar-delete-icon-color;
+    padding: 3px 0 3px 3px;
+    cursor: pointer;
+    margin-right: $calendar-delete-icon-position;
+    margin-top: $calendar-delete-icon-position;
+  }
 }
 

@@ -4,37 +4,49 @@
     ui库
   </h4>
   <div class="components">
-    <em-button (emClick)="clickHandle()" class="" [disabled]="isDisabledButton"  >默认按钮</em-button>
+   <!-- <em-button (emClick)="clickHandle()" class="" [disabled]="isDisabledButton"  >默认按钮</em-button>-->
     <form [formGroup]="formModule">
-      <div class="container " style="text-align: center; padding: 20px">
+  <!--    <div class="container " style="text-align: center; padding: 20px">
         <em-input type=""  formControlName="text"  (emClick)="inputClickHandle($event)" (emChange)="valueChange($event)" placeholder="请输入" ></em-input>
       </div>
 
       <label >
-        <em-checkbox (emChange)="checkChange( $event)" formGroupName="check" ></em-checkbox>
-        <span style="vertical-align: middle">12312</span>
-        <br>
-      </label>
+        <em-checkbox (emChange)="checkChange( $event)" formControlName="check" [id]="'sdsdas'" ></em-checkbox>
 
+
+        <span style="vertical-align: middle">单选按钮</span>
+        <br>
+
+      </label>
+      <em-checkbox (emChange)="checkChange( $event)" formControlName="check1"  ></em-checkbox>
+      <em-checkbox (emChange)="checkChange( $event)" formControlName="check2"  ></em-checkbox>
       <em-dateCalendar placeholder="请输入时间" (emChange)="dateChangaHandle($event)" formControlName="date"></em-dateCalendar>
 
+      <div>
+        <em-radio formControlName="radioA" [value]="'a'" [name]="'radio'"></em-radio>
+        <em-radio formControlName="radioA" [value]=" 'b'" [name]="'radio'"></em-radio>
+      </div>-->
+
+      <em-counter emId="asdss" formControlName="count" (emChange)="valueChange($event)" ></em-counter>
     </form>
 
 
+    <!--<div>
 
-    <div>
       <em-textarea (emChange)="textareaChange()" name="ddasd" [(ngModel)]="ngmodel.textNative"></em-textarea>
       <br>
-      <label >
-        <em-radio [name]="'testradio'" [checked]="true" (emChange)="radioChangeHandle($event)" [disabled]="true"></em-radio>
-        <span class="label">123</span>
-      </label>
+
 
       <br>
 
-
+      <em-dateCalendar placeholder="请输入时间" ></em-dateCalendar>
+      <br>
 
     </div>
+
+    <div class="counter">
+
+    </div>-->
 
   </div>
 </div>

@@ -15,8 +15,13 @@ export class AppComponent {
     this.formModule = this.fb.group({
       text:['',[]],
       areaL:['',[]],
-      check:[true],
-      date:['']
+      check:[],
+      check1:[true],
+      check2:[],
+      date:[''],
+      radioA:[],
+      radioB:[],
+      count:[12],
     })
   }
 
@@ -35,7 +40,6 @@ export class AppComponent {
   public valueChange(event){
     console.log(event.target);
     console.log(this.formModule.value);
-    console.log(this.ngmodel)
   }
 
   public textareaChange(){
@@ -49,13 +53,13 @@ export class AppComponent {
   }
 
   public radioChangeHandle(event){
-    console.log(event.target.value)
+    console.info(this.formModule.value)
   }
 
   public dateChangaHandle(event){
-    console.log("__dateChangaHandle__");
+    /*console.log("__dateChangaHandle__");
     console.log(event)
-    console.log(this.formModule.value)
+    console.log(this.formModule.value)*/
   }
 
 }

@@ -39,11 +39,11 @@ const noop = () => {
   }, styleUrls: ['./input.component.scss']
 })
 export class InputComponent implements OnInit, ControlValueAccessor, AfterViewInit {
-  private  _onTouchedCallback: () => void = noop;
-  private _onChangeCallback: (_: any) => void = noop;
-  private _value: any = '';
-  private _disabled: boolean = false;
-  private _readonly: boolean = false;
+  public  _onTouchedCallback: () => void = noop;
+  public _onChangeCallback: (_: any) => void = noop;
+  public _value: any = '';
+  public _disabled: boolean = false;
+  public _readonly: boolean = false;
 
   public secureStyle: SafeStyle = '';//过滤后的css，不要直接使用setStyle方法，声明周期会付款触发setStyle
   /**
@@ -56,7 +56,7 @@ export class InputComponent implements OnInit, ControlValueAccessor, AfterViewIn
   @Input('style') nativeStyle: string = '';
   @Input('class') className: string = '';
   @Input('name') nativeName: string = '';
-  @Input('id') nativeId: string = '';
+  @Input('emId') nativeId: string = '';
 
   /**  @Input disabled */
   @Input() set disabled(val: any) {
@@ -177,7 +177,7 @@ export class InputComponent implements OnInit, ControlValueAccessor, AfterViewIn
    * @param event
    */
   public inputChangeHandle(event): void {
-    console.log(event.target.value)
+
     this.emChange.emit(event);
   }
 
