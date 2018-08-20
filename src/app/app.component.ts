@@ -1,17 +1,26 @@
-import { Component } from '@angular/core';
+import {Component, ComponentFactoryResolver, ComponentRef, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
+import {AlertinnerComponent} from './dialog/alertinner/alertinner.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  entryComponents:[
+    AlertinnerComponent
+  ],
 })
-export class AppComponent {
+export class AppComponent implements  OnInit{
   public isDisabledButton:boolean =false;
   title = 'app';
   public ngmodel:any = {text:'',textNative:''};
   public formModule:FormGroup;
-  constructor(private fb:FormBuilder){
+  public alerc:any ;
+  public compRef:ComponentRef<any>;
+  @ViewChild('text') textRef:ElementRef;
+  constructor(private fb:FormBuilder,private cfr : ComponentFactoryResolver){
+    this.alerc = this.cfr.resolveComponentFactory(AlertinnerComponent);
+    /*console.log(this.alerc)*/
     this.formModule = this.fb.group({
       text:['',[]],
       areaL:['',[]],
@@ -22,9 +31,13 @@ export class AppComponent {
       radioA:[],
       radioB:[],
       count:[12],
-    })
-  }
+    });
 
+  }
+  ngOnInit(){
+    //this.alerc.setTextValue('eric')
+    console.log(this.alerc.instance)
+  }
   public clickHandle(){
     console.log('click event');
    /* this.isDisabledButton = true*/
@@ -36,7 +49,9 @@ export class AppComponent {
   public inputClickHandle(e){
 
   }
-
+  subComponent(){
+    return AlertinnerComponent
+  }
   public valueChange(event){
     console.log(event.target);
     console.log(this.formModule.value);
