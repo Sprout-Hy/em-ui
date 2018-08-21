@@ -2,6 +2,8 @@
 
 .date-calendar-wrap{
   font-size: 12px;
+  display: inline-block;
+  position: relative;
   .cur-p,.calendar-btn,button{
     cursor: pointer;
   }
@@ -13,8 +15,7 @@
     background-color: inherit;
     outline: none;
   }
-  display: inline-block;
-  position: relative;
+
   .calendar-wrap{
     position: absolute;
     top: calc(100% - 0px);

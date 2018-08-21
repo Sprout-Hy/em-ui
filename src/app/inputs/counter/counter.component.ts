@@ -65,7 +65,7 @@ export class CounterComponent extends InputComponent implements OnInit,ControlVa
 
   @Input() set value(val: any) {
     if (val != this._value) {
-      !val||val<0?val=0:null;
+      !val||val<0?val=1:null;
       this._value = val;
       this._onChangeCallback(val);//更新组件外formControl
     }
@@ -92,15 +92,12 @@ export class CounterComponent extends InputComponent implements OnInit,ControlVa
 
   // 按钮点击更新计数器
   public countChangeHandle(num:number){
-   /* this._value-1>=0?this._value -=1:0;
-    this._onChangeCallback( this._value);*/
-    let value = this.inputRef.nativeElement.value;
-    /*console.log(value);*/
-    this._value-1>=0?this._value +=num:0;
+    //let value = this.inputRef.nativeElement.value || 0;
+    console.log(num);
+    this._value+num>0 ? this._value+=num:this._value=1;
     this.inputRef.nativeElement.value = this._value;
     this._onChangeCallback( this._value);
     this.emChange.emit(this._value);
-
 
   }
 

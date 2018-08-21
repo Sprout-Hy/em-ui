@@ -47,8 +47,12 @@
     <div class="counter">
 
     </div>-->
-
-    <em-dialog [component]="alerc">
+    <em-button (emClick)="toggle()">toggle</em-button>
+    <em-dialog [data]="alerc" #alertContrl>
     </em-dialog>
+    <br>
+    <h4></h4>
+    <em-dateCalendar placeholder="请输入时间" ></em-dateCalendar>
+
   </div>
 </div>

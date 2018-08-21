@@ -12,9 +12,13 @@ $dialog-background-color: rgba(0,0,0,.4);
   display: flex;
   justify-content: center;
   align-items: center;
+  &.hidden{
+    display: none!important;
+  }
   .alert-content{
     background-color: #fff;
-    width: 50%;
+    width: 70%;
+    max-width: 80%;
     min-height: 200px;
     /* margin-left: auto;
 	 margin-right:auto;*/
@@ -22,5 +26,6 @@ $dialog-background-color: rgba(0,0,0,.4);
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
+    padding: 10px;
   }
 }

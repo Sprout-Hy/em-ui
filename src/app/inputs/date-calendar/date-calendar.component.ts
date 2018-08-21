@@ -19,7 +19,7 @@ const noop = () => {
           #nativeInput
           [type]="nativeType"
           [name]="nativeName"
-          [class]="  'el-input '+ className "
+          [class]="  'em-input '+ className "
           [class.normal]=" !readonly&&!disabled "
           [placeholder]="placeholder"
           [(ngModel)]="value"
@@ -35,7 +35,10 @@ const noop = () => {
       <div class="calendar-wrap" *ngIf="isCalendar" #calendarSub>
         <i class="iconfont icon-close-sunken calendar-close" (click)="isCalendar = false" title="关闭"></i>
         <div class="calendarInner">
-          <div class="calendar-head" style="font-size: 14px">
+
+          <div class="date-wap" *ngIf="!isYearChoice">
+
+            <div class="calendar-head" style="font-size: 14px">
               <span class=" prev-btns">
                 <button class="pre-year calendar-btn" (click)="toggleToPrevYear($event)">
                   <i class="icon-btn iconfont icon-prev-double" title="上一年度"></i>
@@ -45,8 +48,8 @@ const noop = () => {
                 </button>
               </span>
 
-            <span class="current-date" style="font-size: 16px">
-                <span class="c-year"> 
+              <span class="current-date" style="font-size: 16px">
+                <span class="c-year" (click)="choiceYear()"> 
                   <span class="cur-p">{{reveal_time.year}}</span> 年
                 </span>
                 <span class="c-month">
@@ -54,7 +57,7 @@ const noop = () => {
                 </span>
               </span>
 
-            <span class="next-btns">
+              <span class="next-btns">
                 <button class="icon-btn next-month calendar-btn" title="下一月" (click)="toggleToNextMonth($event) ">
                   <i class=" iconfont icon-next-single"></i>
                 </button>
@@ -63,32 +66,35 @@ const noop = () => {
                 </button>
               </span>
 
-          </div>
-          <div class="calendar-body">
-            <table class="tab-calendar" border="0" cellspacing="">
-              <tr>
-                <th><span class="ck-h-itm">日</span></th>
-                <th><span class="ck-h-itm">一</span></th>
-                <th><span class="ck-h-itm">二</span></th>
-                <th><span class="ck-h-itm">三</span></th>
-                <th><span class="ck-h-itm">四</span></th>
-                <th><span class="ck-h-itm">五</span></th>
-                <th><span class="ck-h-itm">六</span></th>
-              </tr>
+            </div>
+            <div class="calendar-body">
+              <table class="tab-calendar" border="0" cellspacing="">
+                <tr>
+                  <th><span class="ck-h-itm">日</span></th>
+                  <th><span class="ck-h-itm">一</span></th>
+                  <th><span class="ck-h-itm">二</span></th>
+                  <th><span class="ck-h-itm">三</span></th>
+                  <th><span class="ck-h-itm">四</span></th>
+                  <th><span class="ck-h-itm">五</span></th>
+                  <th><span class="ck-h-itm">六</span></th>
+                </tr>
 
-              <tr *ngFor="let col of calendar_list">
-                <td *ngFor="let data of col">
-                  <div class="ck-td">
+                <tr *ngFor="let col of calendar_list">
+                  <td *ngFor="let data of col">
+                    <div class="ck-td">
                     <span class="ck-td-item"
                           (click)="calendarItemCheck(data)"
                           [class.current-m]="data.isCurrentM"
                           [class.ck-day]="data.day == current_select_time.day && data.month == current_select_time.month && data.year == current_select_time.year ">{{data.day}}</span>
-                  </div>
-                </td>
-              </tr>
+                    </div>
+                  </td>
+                </tr>
 
-            </table>
+              </table>
+            </div>
+            <!--range-->
           </div>
+
         </div>
 
       </div>
@@ -97,15 +103,17 @@ const noop = () => {
   `, styleUrls: ['./date-calendar.component.scss']
 })
 export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
-  private  _onTouchedCallback: () => void = noop;
-  private _onChangeCallback: (_: any) => void = noop;
+  private  _onTouchedCallback: () => void = noop; //onTouche 回调
+  private _onChangeCallback: (_: any) => void = noop; //value on change 回调
   private _value: any = '';
   private _disabled: boolean = false;
   private _readonly: boolean = false;
 
+  public isYearChoice:boolean = false; //年份选择
+
+
   public secureStyle: SafeStyle = '';//过滤后的css，不要直接使用setStyle方法，
   public isCalendar: boolean = false; //是否显示日历（是否弹出）
-
   public current_select_time: DateTime_; //当前选中的日历
   public reveal_time: DateTime_; //当前显示的
   public calendar_list: Array<[CalendarDay_ []]>; //日历列表
@@ -296,8 +304,11 @@ export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
    * @param event
    */
   public calendarInputClick(event) {
-
+    this.isYearChoice = false;
     this.isCalendar = true; //打开日历
+
+
+
     let _date = new Date(); //获取当前时间
     if (!this.inputRef.nativeElement.value) {
       let value = _date.toLocaleDateString();
@@ -469,6 +480,13 @@ export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
    * */
   registerOnTouched(fn: any) {
     this._onTouchedCallback = fn;
+  }
+
+  /**
+   * 选择年份 && 月
+   */
+  public choiceYear():void{
+    this.isYearChoice = true;
   }
 
 

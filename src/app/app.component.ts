@@ -1,6 +1,7 @@
 import {Component, ComponentFactoryResolver, ComponentRef, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {AlertinnerComponent} from './dialog/alertinner/alertinner.component';
+import {DialogComponent} from './dialog/dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -15,11 +16,11 @@ export class AppComponent implements  OnInit{
   title = 'app';
   public ngmodel:any = {text:'',textNative:''};
   public formModule:FormGroup;
-  public alerc:any ;
+  public alerc:any =null;
   public compRef:ComponentRef<any>;
   @ViewChild('text') textRef:ElementRef;
   constructor(private fb:FormBuilder,private cfr : ComponentFactoryResolver){
-    this.alerc = this.cfr.resolveComponentFactory(AlertinnerComponent);
+
     /*console.log(this.alerc)*/
     this.formModule = this.fb.group({
       text:['',[]],
@@ -35,8 +36,14 @@ export class AppComponent implements  OnInit{
 
   }
   ngOnInit(){
-    //this.alerc.setTextValue('eric')
-    console.log(this.alerc.instance)
+
+  /*  this.alerc = {
+      component:this.cfr.resolveComponentFactory(AlertinnerComponent),
+      inputs:{
+        className:'test',
+      }
+    };*/
+
   }
   public clickHandle(){
     console.log('click event');
@@ -53,8 +60,8 @@ export class AppComponent implements  OnInit{
     return AlertinnerComponent
   }
   public valueChange(event){
-    console.log(event.target);
-    console.log(this.formModule.value);
+    /*console.log(event.target);
+    console.log(this.formModule.value);*/
   }
 
   public textareaChange(){
@@ -76,5 +83,19 @@ export class AppComponent implements  OnInit{
     console.log(event)
     console.log(this.formModule.value)*/
   }
+  @ViewChild('alertContrl') alertCtrl:DialogComponent;
+  public toggle(){
 
+    if ( !this.alertCtrl.show) {
+      this.alerc = {
+        component:this.cfr.resolveComponentFactory(AlertinnerComponent),
+        inputs:{
+          className:'test',
+        }
+      };
+      this.alertCtrl.viewPresent()
+    }
+    this.alertCtrl.show = !this.alertCtrl.show;
+
+  }
 }
