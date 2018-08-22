@@ -20,7 +20,7 @@ const noop = () => {
         #nativeInput
         [type]="nativeType"
         [name]="nativeName"
-        [class]="  'el-input '+ className "
+        [class]="  'em-input '+ className "
         [class.normal]=" !readonly&&!disabled "
         [placeholder]="placeholder"
         [(ngModel)]="value"
@@ -160,7 +160,7 @@ export class InputComponent implements OnInit, ControlValueAccessor, AfterViewIn
   public setStyle() {
 
   /*  console.log('__setStyle__');
-    console.log(new Date().getTime())*/;
+    console.log(new Date().getTime())*/
     return this.filtration.bypassSecurityTrustStyle(this.nativeStyle);
   }
 

@@ -62,8 +62,6 @@ export class ButtonComponent implements OnInit,AfterViewInit {
    * filter style string.
    */
   public setStyle():SafeStyle{
-
-    console.log(11);
     return this.filtration.bypassSecurityTrustStyle(this.emStyle);
 
   }
