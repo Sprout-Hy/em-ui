@@ -1,16 +1,4 @@
 /*  font */
 @import "assets/font/iconfont.css";
-
+@import "themes/em_global";
 /* You can add global styles to this file, and also import other style files */
-@import "themes/button";
-@import "themes/input";
-@import "themes/textarea";
-@import "themes/checkbox";
-@import "themes/radio";
-@import "themes/date-calendar";
-@import "themes/counter";
-@import "themes/dialog";
-
-[cursor-point]{
-  cursor: pointer;
-}

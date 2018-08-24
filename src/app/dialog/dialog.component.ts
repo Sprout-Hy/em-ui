@@ -11,6 +11,7 @@ import {ComponentRef} from '@angular/core/src/linker/component_factory';
 
     >
       <div class="alert-content">
+        <i class="iconfont icon-close-sunken btn-close" (click)="dismiss(true)"></i>
         <ng-template #domRoom >
 
         </ng-template>
@@ -23,7 +24,7 @@ export class DialogComponent implements OnInit, OnDestroy {
 
   public show: boolean = false; //背景色
 
-  private __subComponent: DialogChildComponentData = null; //子组件数据
+  public __subComponent: DialogChildComponentData = null; //子组件数据
   private ViewComponent: ComponentRef<any> = null; //子组件
   @ViewChild('domRoom', {read: ViewContainerRef}) ViewContainer: ViewContainerRef; //视图容器
 
@@ -87,6 +88,7 @@ export class DialogComponent implements OnInit, OnDestroy {
        * @type {ComponentRef<any>}
        */
       this.ViewComponent = this.ViewContainer.createComponent(this.data.component);
+
       console.log(this.data.component);
       /**
        * 给子组件属性赋值
@@ -109,8 +111,8 @@ export class DialogComponent implements OnInit, OnDestroy {
         }
         _that.show = false;
       };
-      console.log(this.ViewComponent)
-
+      console.log(this.ViewComponent);
+      this.show = true;//显示视图
     }
 
 

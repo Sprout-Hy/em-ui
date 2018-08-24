@@ -18,6 +18,9 @@ export class AppComponent implements  OnInit{
   public formModule:FormGroup;
   public alerc:any =null;
   public compRef:ComponentRef<any>;
+
+  public selects= [];
+
   @ViewChild('text') textRef:ElementRef;
   constructor(private fb:FormBuilder,private cfr : ComponentFactoryResolver){
 
@@ -33,6 +36,7 @@ export class AppComponent implements  OnInit{
       radioB:[],
       count:[12],
     });
+
 
   }
   ngOnInit(){
@@ -98,4 +102,9 @@ export class AppComponent implements  OnInit{
     this.alertCtrl.show = !this.alertCtrl.show;
 
   }
+
+  public selectChange(event){
+    console.log(event)
+  }
+
 }

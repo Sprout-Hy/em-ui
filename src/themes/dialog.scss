@@ -16,6 +16,7 @@ $dialog-background-color: rgba(0,0,0,.4);
     display: none!important;
   }
   .alert-content{
+    position: relative;
     background-color: #fff;
     width: 70%;
     max-width: 80%;
@@ -27,5 +28,14 @@ $dialog-background-color: rgba(0,0,0,.4);
     -moz-border-radius: 3px;
     border-radius: 3px;
     padding: 10px;
+  }
+
+  .btn-close{
+    color: #d5d5d5;
+    position: absolute;
+    right: -9px;
+    top: -9px;
+    cursor: pointer;
+
   }
 }

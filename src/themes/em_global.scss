@@ -1,0 +1,15 @@
+
+/* You can add global styles to this file, and also import other style files */
+@import "button";
+@import "input";
+@import "textarea";
+@import "checkbox";
+@import "radio";
+@import "date-calendar";
+@import "counter";
+@import "dialog";
+@import "select";
+
+[cursor-point]{
+  cursor: pointer;
+}
