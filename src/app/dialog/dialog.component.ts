@@ -13,8 +13,12 @@ import {ComponentRef} from '@angular/core/src/linker/component_factory';
       <div class="alert-content">
         <i class="iconfont icon-close-sunken btn-close" (click)="dismiss(true)"></i>
         <ng-template #domRoom >
-
+          <!--方式1 动态加载组件-->
         </ng-template>
+
+        <ng-content>
+          <!--方式2 直接显示-->
+        </ng-content>
       </div>
     </div>
   `, styleUrls: ['./dialog.component.scss'],
@@ -33,6 +37,9 @@ export class DialogComponent implements OnInit, OnDestroy {
    * @param {DialogChildComponentData} data
    */
   @Input() set data(data: DialogChildComponentData) {
+
+
+
     if (data) {
       this.__subComponent = data;
       this.viewPresent();
@@ -64,8 +71,8 @@ export class DialogComponent implements OnInit, OnDestroy {
    * 销毁子组件
    */
   public subViewDismiss(){
-    console.log('__subViewDismiss__');
-    console.log(this.ViewComponent);
+    /*console.log('__subViewDismiss__');
+    console.log(this.ViewComponent);*/
     if (this.ViewComponent){
       this.ViewComponent.destroy();
       this.ViewComponent = null;
@@ -112,18 +119,17 @@ export class DialogComponent implements OnInit, OnDestroy {
         _that.show = false;
       };
       console.log(this.ViewComponent);
-      this.show = true;//显示视图
+
     }
 
+    this.show = true;//显示视图
 
   }
 
 
-  public dismiss(val:any) {
-    if (val){
+  public dismiss(val?:any) {
       this.subViewDismiss();
       this.show = false;
-    }
   }
 
 }

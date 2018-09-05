@@ -35,6 +35,7 @@ export class AppComponent implements  OnInit{
       radioA:[],
       radioB:[],
       count:[12],
+      select:[]
     });
 
 
@@ -47,6 +48,10 @@ export class AppComponent implements  OnInit{
         className:'test',
       }
     };*/
+
+    /*setInterval(()=>{
+      this.setRandomvalue()
+    },1000)*/
 
   }
   public clickHandle(){
@@ -105,6 +110,15 @@ export class AppComponent implements  OnInit{
 
   public selectChange(event){
     console.log(event)
+  }
+
+
+  public select2ClickHandle(event){
+    console.log(event)
+  }
+
+  setRandomvalue(){
+    this.formModule.get('select').setValue(String(Math.random()*10).slice(0,5))
   }
 
 }

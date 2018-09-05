@@ -28,6 +28,11 @@
       </div>-->
 
       <em-counter emId="asdss" formControlName="count" (emChange)="valueChange($event)" ></em-counter>
+
+      <em-select2 placeholder="请选择"  [data]="[{label:'选项一',value:123}]"  formControlName="select" (emChange)="select2ClickHandle($event)" ></em-select2>
+      <em-button (emClick)="setRandomvalue( )">
+        变化
+      </em-button>
     </form>
 
 
@@ -47,16 +52,15 @@
     <div class="counter">
 
     </div>-->
-    <em-button (emClick)="toggle()">toggle</em-button>
+
+   <!-- <em-button (emClick)="toggle()">toggle</em-button>
     <em-dialog [data]="alerc" #alertContrl>
     </em-dialog>
     <br>
     <h4></h4>
     <em-dateCalendar placeholder="请输入时间" ></em-dateCalendar>
-    <br>
-    <br>
-    <br>
-    <em-select placeholder="请选择" [data]="selects" (emChange)="selectChange($event)"></em-select>
+    <br>-->
+
 
   </div>
 </div>

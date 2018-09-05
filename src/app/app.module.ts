@@ -5,6 +5,7 @@ import {ButtonModule} from './button/button.module';
 import {InputsModule} from './inputs/inputs.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DialogModule} from './dialog/dialog.module';
+import {ShopnavModule} from './shopnav/shopnav.module';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import {DialogModule} from './dialog/dialog.module';
     ButtonModule,
     InputsModule,
     DialogModule,
+    ShopnavModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

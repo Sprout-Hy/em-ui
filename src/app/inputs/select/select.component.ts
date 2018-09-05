@@ -38,6 +38,7 @@ const CUSTOM_SELECT_CONTROL_VALUE_ACCESSOR: Provider = {
         [name]="nativeName"
         [class]="  'em-input '+ className "
         [class.normal]=" !readonly&&!disabled "
+        [class.s-focus]="isFocus"
         [placeholder]="placeholder"
         [(ngModel)]="value"
         [disabled]="disabled"
@@ -103,7 +104,7 @@ export class SelectComponent extends InputComponent implements OnInit,OnChanges,
     return this._readonly;
   }
 
-  @Output() emChange: EventEmitter<any> = new EventEmitter<any>(); //valueChange handle
+ // @Output() emChange: EventEmitter<any> = new EventEmitter<any>(); //valueChange handle
 
   public isFocus:boolean = false;
   @Input('data') optionsData:Array<{label:string,value:any}> = [];
@@ -114,6 +115,7 @@ export class SelectComponent extends InputComponent implements OnInit,OnChanges,
 
 
   ngOnInit() {
+
 
   }
 
