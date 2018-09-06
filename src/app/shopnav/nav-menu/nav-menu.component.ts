@@ -1,7 +1,6 @@
-import {AfterContentInit, Component, ContentChildren, Input, OnInit, QueryList} from '@angular/core';
+import { Component, ContentChildren, Input, OnInit, QueryList} from '@angular/core';
 import {NavitemRecursiveData_} from '../shopnav.component';
-import {NavItemComponent} from '../nav-item/nav-item.component';
-import {ButtonComponent} from '../../EMUI/button/button.component';
+import {ButtonComponent} from '../../button/button.component';
 
 @Component({
   selector: 'em-nav-menu',

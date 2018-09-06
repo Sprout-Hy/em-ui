@@ -1,79 +1,79 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  forwardRef,
-  Input,
-  NgZone,
-  OnChanges,
-  OnInit,
-  Output,
-  Provider,
-  SimpleChange
-} from '@angular/core';
+import {Component, ElementRef, forwardRef, Input, OnInit, Provider, ViewChild} from '@angular/core';
+import {NG_VALUE_ACCESSOR} from '@angular/forms';
 import {InputComponent} from '../input/input.component';
 import {DomSanitizer} from '@angular/platform-browser';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
-const CUSTOM_SELECT_CONTROL_VALUE_ACCESSOR: Provider = {
-  provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => SelectComponent),
-  multi: true
+const CUSTOM_SELECT_CONTROL_VALUE_ACCESSOR:Provider = {
+  provide:NG_VALUE_ACCESSOR,
+  useExisting:forwardRef(
+    ()=>SelectComponent
+  ),
+  multi:true
 };
 
+const noop = () => {
+};
 
 @Component({
   selector: 'em-select',
-  providers:[
-    CUSTOM_SELECT_CONTROL_VALUE_ACCESSOR
-  ],
-  changeDetection:ChangeDetectionStrategy.OnPush,
+  providers:[CUSTOM_SELECT_CONTROL_VALUE_ACCESSOR],
   template: `
-    
-    <div class="em-input-shell em-select-shell" [style]="secureStyle">
+    <div class="em-input-shell  em-select-shell" [style]="secureStyle">
       <input
         #nativeInput
-        type="text"
+        [type]="nativeType"
         [name]="nativeName"
         [class]="  'em-input '+ className "
         [class.normal]=" !readonly&&!disabled "
-        [class.s-focus]="isFocus"
         [placeholder]="placeholder"
         [(ngModel)]="value"
         [disabled]="disabled"
-        [readonly]="readonly"
+        [readonly]="true"
         [id]="nativeId"
-       
+        (click)="handleClick($event)"
         (change)="inputChangeHandle($event)"
         (blur)="inputBlurHandle($event)"
         (focus)="inputFocusHandle($event)"
       />
-      <span class="sel-icon-wrap">
+
+      <span class="sel-icon-wrap" (click)="selectIconClickHandle($event)">
         <span class="icon-inner" [class.handle-animate]="isFocus">
           <i class="iconfont icon-suffix_d sele-icon"></i>
         </span>
         
       </span>
-      
+
       <div class="em-sel-dropdown-wrap em-options-wrap" [class.active-animate]="isFocus">
         <div class="options-inner">
           <ul class="options-ls">
             <li class="option" *ngFor=" let item of optionsData" (click)="optionClickHandle(item)">{{item.label}}</li>
-           
+
           </ul>
         </div>
       </div>
       
     </div>
+
     <!-- 遮罩层 -->
     <div class="shade-fixed" *ngIf="isFocus" (click)="selectCloseHandle()"></div>
+    
   `,
   styleUrls: ['./select.component.scss']
 })
-export class SelectComponent extends InputComponent implements OnInit,OnChanges,ControlValueAccessor {
+export class SelectComponent extends InputComponent implements OnInit {
+  /**
+   * -----------------
+   * 输入属性 @Input
+   * -----------------
+   */
+ /* @Input('type') nativeType: 'text' | 'number' | 'password' = 'text';
+  @Input() placeholder: string = '';
+  @Input('style') nativeStyle: string = '';
+  @Input('class') className: string = '';
+  @Input('name') nativeName: string = '';
+  @Input('emId') nativeId: string = '';*/
 
-  /**  @Input disabled */
+ /* /!**  @Input disabled *!/
   @Input() set disabled(val: any) {
     this._disabled = val;
   }
@@ -81,62 +81,41 @@ export class SelectComponent extends InputComponent implements OnInit,OnChanges,
     return this._disabled;
   }
 
-
   @Input() set value(val: any) {
+    /!*val!=this._value? this._value = val:null;*!/
     if (val != this._value) {
-      !val||val<0?val=1:null;
       this._value = val;
       this._onChangeCallback(val);//更新组件外formControl
     }
   }
   get value() {
     return this._value;
+  }*/
+
+
+
+
+  /** 组件内部的input*/
+  //@ViewChild('nativeInput') inputRef: ElementRef;
+
+  /* select component attribute  */
+  public isFocus:boolean = true; //是否开启弹窗
+  @Input('data') optionsData:Array<SelectOptions_> = []; //
+  constructor(public filtration: DomSanitizer) {
+    super(filtration)
   }
-
-
-
-  @Input() set readonly(val: any) {
-    this._readonly != val ? this._readonly = val : null;
-
-  }
-
-  get readonly(): any {
-    return this._readonly;
-  }
-
- // @Output() emChange: EventEmitter<any> = new EventEmitter<any>(); //valueChange handle
-
-  public isFocus:boolean = false;
-  @Input('data') optionsData:Array<{label:string,value:any}> = [];
-
-  constructor(public filtration: DomSanitizer, private zone:NgZone, private cdr:ChangeDetectorRef) {
-    super(filtration);
-  }
-
 
   ngOnInit() {
-
-
-  }
-
-  ngOnChanges(changes:{[propKey:string]:SimpleChange}){
-    /* for (let propName in changes) {
-       let changedProp = changes[propName];
-
-       if (propName == 'optionsData'&& !changedProp.firstChange) {
-       }
-     }*/
-
   }
 
 
   /**
-   * 获取焦点时触发 _onTouchedCallback
+   * 点击时触发 _onTouchedCallback
    * @param event
    */
-  public inputFocusHandle(event): void {
+  public handleClick(event): void {
     this._onTouchedCallback();
-    this.emFocus.emit(event);
+    this.emClick.emit(event);
     !this.isFocus?this.isFocus = true:null; //开启 弹出
   }
 
@@ -146,17 +125,30 @@ export class SelectComponent extends InputComponent implements OnInit,OnChanges,
   public selectCloseHandle(){
     this.isFocus = false;
   }
-
   /**
    * 重写 change 函数，将整个item发射出去
    * @param  {{label: string; value: any }} item
    */
   public optionClickHandle(item:{label:string,value:any}):void{
-      this._value = item.label;
-      this.inputRef.nativeElement.value = item.label
-      this._onChangeCallback(item.label);
-      this.emChange.emit(item);
-      this.isFocus = false; //关闭选择器
+    this._value = item.label;
+    this.inputRef.nativeElement.value = item.label;
+    this._onChangeCallback(item.label);
+    this.emChange.emit(item);
+    this.isFocus = false; //关闭选择器
   }
 
+  /**
+   * 下拉图标点击
+   */
+  public selectIconClickHandle(){
+    this.emClick.emit(event);
+    this.isFocus = !this.isFocus
+  }
+
+}
+
+export interface SelectOptions_ {
+  label:string,
+  value:any,
+  children?:Array<SelectOptions_>
 }

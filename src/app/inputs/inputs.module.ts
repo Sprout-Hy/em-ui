@@ -9,7 +9,7 @@ import { RadioComponent } from './radio/radio.component';
 import { DateCalendarComponent } from './date-calendar/date-calendar.component';
 import { CounterComponent } from './counter/counter.component';
 import { SelectComponent } from './select/select.component';
-import { Select2Component } from './select2/select2.component';
+import { CascadeComponent } from './cascade/cascade.component';
 
 @NgModule({
   imports: [
@@ -27,7 +27,7 @@ import { Select2Component } from './select2/select2.component';
     DateCalendarComponent,
     CounterComponent,
     SelectComponent,
-    Select2Component,
+    CascadeComponent,
   ],
   exports:[
     InputComponent,
@@ -37,7 +37,7 @@ import { Select2Component } from './select2/select2.component';
     DateCalendarComponent,
     CounterComponent,
     SelectComponent,
-    Select2Component,
+    CascadeComponent,
   ],
   entryComponents:[
     InputComponent,
