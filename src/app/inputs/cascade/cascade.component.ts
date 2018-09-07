@@ -5,7 +5,7 @@
  */
 
 import {
-  AfterViewInit, Component, forwardRef, Input, OnChanges, OnInit, Provider, Renderer2, TemplateRef, ViewChild, ViewContainerRef
+  AfterViewInit, Component, forwardRef, Input, OnInit, Provider, TemplateRef, ViewChild, ViewContainerRef
 } from '@angular/core';
 import {SelectComponent, SelectOptions_} from '../select/select.component';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -17,8 +17,10 @@ const CUSTOM_CASCADE_CONTROL_VALUE_ACCESS: Provider = {
   provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => CascadeComponent), multi: true
 };
 
+/*
 const noop = () => {
 };
+*/
 
 
 @Component({
@@ -51,7 +53,8 @@ const noop = () => {
       <div class="em-sel-dropdown-wrap em-options-wrap" [class.active-animate]="isFocus">
         <!-- 【主选项框】 -->
         <div class="options-inner" #tagContainer>
-          <ul class="options-ls">
+          <ul class="options-ls" *ngIf="OptionArr?.length">
+            
             <li class="option"  *ngFor=" let item of OptionArr;let idx =index; " [class.check]="checkOptionsIndexList[0]== idx" (click)="firstDropDownCheck(idx)">
               {{item.label}}
               <i class="item-mark iconfont icon-suffix_r" *ngIf="item.children?.length"></i>
@@ -63,7 +66,7 @@ const noop = () => {
         <!--模板、用于动态创建 【子选项框】 view -->
         <ng-template let-option #cascadeTemplate>
           <div class="options-inner">
-            <ul class="options-ls">
+            <ul class="options-ls" *ngIf="option && option.data?.length">
               <li class="option" *ngFor=" let item of option.data;let idx = index" [class.check]="checkOptionsIndexList[option.viewIndex+1]== idx" (click)="cascadeOptionClick(item, option.viewIndex, idx)">
                 {{item.label}}
                 <i class="item-mark iconfont icon-suffix_r" *ngIf="item.children?.length"></i>
@@ -121,7 +124,7 @@ const noop = () => {
   private drop_down_wrap_index: number = 0;
 
 
-  constructor(public filtration: DomSanitizer, private render: Renderer2) {
+  constructor(public filtration: DomSanitizer) {
 
     super(filtration);// super()
 
@@ -129,15 +132,15 @@ const noop = () => {
 
   ngOnInit() {
 
-    this.OptionArr = [
+   /* this.OptionArr = [
 
       {
-        label: '选项01', value: '111', children: [{
-          label: '选项02-1',
-          value: '2-1',
+        label: '选项01-1', value: '1--', children: [{
+          label: '选项1-2-1',
+          value: '1-2-1',
           children: [
-            {label: '选项3-1', value: '2-1', children: []},
-            {label: '选项3-2', value: '2-2', children: []},]
+            {label: '选项1-3-1', value: '1-2-1', children: []},
+            {label: '选项1-3-2', value: '1-2-2', children: []},]
         },
         {
           label: '选项02-2',
@@ -162,7 +165,7 @@ const noop = () => {
         ]
       },
     ];
-
+*/
     /* let _context = {viewIndex:this.drop_down_wrap_index, data: this.OptionArr};
 
      let oo = this.dynamicContainer.createEmbeddedView(this._Temp,{$implicit:_context},2);
@@ -218,7 +221,9 @@ const noop = () => {
    * @param {number} itemIndex
    */
   public cascadeOptionClick(optionData: SelectOptions_, viewIndex: number, itemIndex:number): void {
-
+    if (!optionData || viewIndex ==undefined || itemIndex ==undefined ) {
+      throw  new Error( '__cascadeOptionClick__ expect 3 argument, but get void' )
+    }
 
     /**
      * 删除 checkOptionsIndexList EmbeddedViewIndex+1 位置以及以后的所有index
@@ -248,11 +253,10 @@ const noop = () => {
    * @param {number} EmbeddedViewIndex
    */
   private createEmbeddedViewWithCheckOption(opsArr: Array<SelectOptions_>, EmbeddedViewIndex: number, ) {
-    if (EmbeddedViewIndex != -1 ){
 
+    if (!opsArr || EmbeddedViewIndex == undefined || isNaN(EmbeddedViewIndex) ){
+      throw new Error('__createEmbeddedViewWithCheckOption__ need 2 argument =>  opsArr:SelectOptions_ [], EmbeddedViewIndex: number')
     }
-
-
 
     if (EmbeddedViewIndex >= 0 && this.dynamicContainer.length > EmbeddedViewIndex) {
 
@@ -309,7 +313,8 @@ const noop = () => {
 
   /**
    * 最终数据选择，
-   * @param {{label: string; value: any}} item
+   *
+   * item:{label: string; value: any}
    */
   public cascadeChecked(item: { label: string, value: any }) {
     this._value = item.label;

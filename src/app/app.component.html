@@ -29,7 +29,7 @@
 
       <em-counter emId="asdss" formControlName="count" (emChange)="valueChange($event)" ></em-counter>
 
-      <em-cascade placeholder="请选择" [data]="[{label:'选项一',value:123}]"  formControlName="select" (emChange)="select2ClickHandle($event)" ></em-cascade>
+      <em-cascade placeholder="请选择" [data]="cascadeData"  formControlName="select" (emChange)="select2ClickHandle($event)" ></em-cascade>
 
     </form>
 

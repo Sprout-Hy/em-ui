@@ -2,6 +2,7 @@ import {Component, ComponentFactoryResolver, ComponentRef, ElementRef, OnInit, V
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {AlertinnerComponent} from './dialog/alertinner/alertinner.component';
 import {DialogComponent} from './dialog/dialog.component';
+import {SelectOptions_} from './inputs/select/select.component';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,9 @@ export class AppComponent implements  OnInit{
 
   public selects= [];
 
+  public cascadeData: Array<SelectOptions_>  = null;
+
+
   @ViewChild('text') textRef:ElementRef;
   constructor(private fb:FormBuilder,private cfr : ComponentFactoryResolver){
 
@@ -38,6 +42,39 @@ export class AppComponent implements  OnInit{
       select:[]
     });
 
+    this.cascadeData = [
+
+      {
+        label: '选项01-1dddddddddd', value: '1--', children: [{
+          label: '选项1-2-1',
+          value: '1-2-1',
+          children: [
+            {label: '选项1-3-1', value: '1-2-1', children: []},
+            {label: '选项1-3-2', value: '1-2-2', children: []},]
+        },
+          {
+            label: '选项02-2',
+            value: '2-2',
+            children: []
+          },
+        ]
+      },
+      {
+        label: '选项01', value: '111', children: [{
+          label: '选项02-1',
+          value: '2-1',
+          children: [
+            {label: '选项3-1', value: '2-1', children: []},
+            {label: '选项3-2', value: '2-2', children: []},]
+        },
+          {
+            label: '选项02-2',
+            value: '2-2',
+            children: []
+          },
+        ]
+      },
+    ];
 
   }
   ngOnInit(){

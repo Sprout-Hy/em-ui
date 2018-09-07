@@ -1,4 +1,4 @@
-import {Component, ElementRef, forwardRef, Input, OnInit, Provider, ViewChild} from '@angular/core';
+import {Component, forwardRef, Input, OnInit, Provider,} from '@angular/core';
 import {NG_VALUE_ACCESSOR} from '@angular/forms';
 import {InputComponent} from '../input/input.component';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -11,8 +11,10 @@ const CUSTOM_SELECT_CONTROL_VALUE_ACCESSOR:Provider = {
   multi:true
 };
 
+/*
 const noop = () => {
 };
+*/
 
 @Component({
   selector: 'em-select',
@@ -127,7 +129,7 @@ export class SelectComponent extends InputComponent implements OnInit {
   }
   /**
    * 重写 change 函数，将整个item发射出去
-   * @param  {{label: string; value: any }} item
+   *  {{label: string; value: any }} item
    */
   public optionClickHandle(item:{label:string,value:any}):void{
     this._value = item.label;
@@ -147,6 +149,9 @@ export class SelectComponent extends InputComponent implements OnInit {
 
 }
 
+/**
+ * 选择框 元数据接口
+ */
 export interface SelectOptions_ {
   label:string,
   value:any,
