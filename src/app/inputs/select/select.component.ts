@@ -99,7 +99,7 @@ export class SelectComponent extends InputComponent implements OnInit {
   //@ViewChild('nativeInput') inputRef: ElementRef;
 
   /* select component attribute  */
-  public isFocus:boolean = true; //是否开启弹窗
+  public isFocus:boolean = false; //是否开启弹窗
   @Input('data') optionsData:Array<SelectOptions_> = []; //
   constructor(public filtration: DomSanitizer) {
     super(filtration)
