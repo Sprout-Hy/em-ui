@@ -2,6 +2,7 @@ import {Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, 
 import {InputComponent} from '../input/input.component';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {E} from '@angular/core/src/render3';
 
 const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR: Provider = {
   provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DateCalendarComponent), multi: true
@@ -13,7 +14,7 @@ const noop = () => {
 
 @Component({
   selector: 'em-dateCalendar', providers: [CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR], template: `
-    <div class="date-calendar-wrap" #rootCalendar>
+    <div class="date-calendar-wrap" #rootCalendar [class.active]="isCalendar">
       <div class="em-input-shell" [style]="secureStyle">
         <input
           #nativeInput
@@ -24,7 +25,7 @@ const noop = () => {
           [placeholder]="placeholder"
           [(ngModel)]="value"
           [disabled]="disabled"
-          [readonly]="false"
+          [readonly]="true"
           [id]="nativeId"
           (click)="calendarInputClick($event)"
           (change)="inputChangeHandle($event)"
@@ -36,29 +37,37 @@ const noop = () => {
         <i class="iconfont icon-close-sunken calendar-close" (click)="isCalendar = false" title="关闭"></i>
         <div class="calendarInner">
 
-          <div class="date-wap" *ngIf="!isYearChoice">
+          <div class="date-wap">
 
-            <div class="calendar-head" style="font-size: 14px">
-              <span class=" prev-btns">
-                <button class="pre-year calendar-btn" (click)="toggleToPrevYear($event)">
+            <div class="calendar-head" [class.month-choice]="isMonthChoice" style="font-size: 14px">
+              <span class=" prev-btns" *ngIf="!isMonthChoice">
+                <button   class="pre-year calendar-btn" (click)="toggleToPrevYear($event)">
                   <i class="icon-btn iconfont icon-prev-double" title="上一年度"></i>
                 </button>
-                <button title="上一月" (click)="toggleToPrevMonth($event)">
+                <button *ngIf="!isYearChoice " title="上一月" (click)="toggleToPrevMonth($event)">
                   <i class="icon-btn iconfont icon-perv-single"></i>
                 </button>
               </span>
 
               <span class="current-date" style="font-size: 16px">
-                <span class="c-year" (click)="choiceYear()"> 
-                  <span class="cur-p">{{reveal_time.year}}</span> 年
+                <span class="title" *ngIf="!isMonthChoice && !isYearChoice">
+                  <span class="c-year" (click)="choiceYear()"> 
+                    <span class="cur-p">{{reveal_time.year}}</span> 年
+                  </span>
+                  <span class="c-month" (click)="choiceMonth()">
+                    <span class="cur-p">{{reveal_time.month}}</span> 月
+                  </span>
                 </span>
-                <span class="c-month">
-                  <span class="cur-p">{{reveal_time.month}}</span> 月
+                
+                <span class="title" *ngIf="isYearChoice">
+                  {{ (check_year - check_year%10) +'  -  ' + (check_year - check_year%10+10)}}
                 </span>
+                
+                <span class="title" *ngIf="isMonthChoice">请选择月份</span>
               </span>
 
-              <span class="next-btns">
-                <button class="icon-btn next-month calendar-btn" title="下一月" (click)="toggleToNextMonth($event) ">
+              <span class="next-btns" *ngIf="!isMonthChoice" >
+                <button *ngIf="!isYearChoice " class="icon-btn next-month calendar-btn" title="下一月" (click)="toggleToNextMonth($event) ">
                   <i class=" iconfont icon-next-single"></i>
                 </button>
                 <button class="icon-btn next-year" title="下一年度" (click)="toggleToNextYear($event)">
@@ -67,6 +76,7 @@ const noop = () => {
               </span>
 
             </div>
+
             <div class="calendar-body">
               <table class="tab-calendar" border="0" cellspacing="">
                 <tr>
@@ -91,6 +101,20 @@ const noop = () => {
                 </tr>
 
               </table>
+
+              <div class="y_m-check-w" *ngIf="isYearChoice || isMonthChoice">
+
+                <div class="y-check-w in-wp" *ngIf="isYearChoice">
+                  <div class="year-item" *ngFor=" let year of year_list">
+                    <span class="itm-lb" (click)="year_change_handle(year)">{{year}}</span>
+                  </div>
+                </div>
+                <div class="m-check-w in-wp" *ngIf="isMonthChoice">
+                  <div class="month-item" *ngFor="let m of month_list;">
+                    <span class="itm-lb" (click)="month_change_handle(m.value)">{{m.label}}</span>
+                  </div>
+                </div>
+              </div>
             </div>
             <!--range-->
           </div>
@@ -98,25 +122,40 @@ const noop = () => {
         </div>
 
       </div>
+
     </div>
+    <!--弹出-->
+    <div class="pop_model_dc" *ngIf="isCalendar" (click)="dataCalendarDismiss()"></div>
 
   `, styleUrls: ['./date-calendar.component.scss']
 })
-export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
-  private  _onTouchedCallback: () => void = noop; //onTouche 回调
+export class DateCalendarComponent implements OnInit, ControlValueAccessor {
+  private _onTouchedCallback: () => void = noop; //onTouche 回调
   private _onChangeCallback: (_: any) => void = noop; //value on change 回调
   private _value: any = '';
   private _disabled: boolean = false;
   private _readonly: boolean = false;
 
-  public isYearChoice:boolean = false; //年份选择
+  public isYearChoice: boolean = false; //年份选择
+  public isMonthChoice: boolean = false; //月份选择
 
 
   public secureStyle: SafeStyle = '';//过滤后的css，不要直接使用setStyle方法，
+
   public isCalendar: boolean = false; //是否显示日历（是否弹出）
+
   public current_select_time: DateTime_; //当前选中的日历
-  public reveal_time: DateTime_; //当前显示的
+
+  public reveal_time: DateTime_; //当前显示的日期
+
   public calendar_list: Array<[CalendarDay_ []]>; //日历列表
+
+  public year_list: Array<number> = []; //年份列表，用户年份选择时的视图展示
+
+  public check_year: number = null; //当前选中的year
+  public check_month: number = null; //当前选中的month
+
+  public month_list: Array<{ label: string, value: number }> = []; //
 
   /**
    * -----------------
@@ -134,6 +173,7 @@ export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
   @Input() set disabled(val: any) {
     this._disabled = val;
   }
+
   get disabled(): any {
     return this._disabled;
   }
@@ -172,57 +212,65 @@ export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
 
   @ViewChild('nativeInput') inputRef: ElementRef;
   @ViewChild('calendarSub') calendarDivSub: ElementRef;
-  @ViewChild('rootCalendar') rootCalendar:ElementRef;
- /* private element:ElementRef;*/
-  constructor(public filtration: DomSanitizer, private rende: Renderer2,private ele:ElementRef) {
+  @ViewChild('rootCalendar') rootCalendar: ElementRef;
+
+  /* private element:ElementRef;*/
+  constructor(public filtration: DomSanitizer, private rende: Renderer2, private ele: ElementRef) {
     /*super(filtration);*/
 
     this.secureStyle = this.setStyle();
   }
 
   ngOnInit() {
+
     let now_time = new Date();
     this.current_select_time = {
       year: now_time.getFullYear(), month: now_time.getMonth() + 1, day: now_time.getDate(), weekday: now_time.getDay(),
     };
 
+
     this.reveal_time = {
       year: now_time.getFullYear(), month: now_time.getMonth() + 1, day: now_time.getDate(), weekday: now_time.getDay(),
     };
 
+    /**
+     * 初始化 check_year && check_month
+     * @type {number}
+     */
+    this.check_year = this.reveal_time.year;
+    this.check_month = this.reveal_time.month;
+
+
     this.calendarListInit();  //初始化日历
 
-    this.ele.nativeElement.onmouseleave= (event)=>{ //移出时关闭日历
-      this.isCalendar?this.isCalendar = false:null;
-    }
-
+    /* this.ele.nativeElement.onmouseleave= (event)=>{ //移出时关闭日历
+       this.isCalendar?this.isCalendar = false:null;
+     }*/
 
 
   }
 
-  public calendarClose(event){
+  public calendarClose(event) {
 
-    let target:any = event;
+    let target: any = event;
     if (target == this.rootCalendar.nativeElement) { //是否是根元素 #rootCalendar
-      return
+      return;
     }
 
     /* if (!has(childNodes,target)){
        this.isCalendar = false;
      }*/
     let parent = target.parentNode;
-    while (parent){
-      if (parent.className&&parent.className.search('date-calendar-wrap')>-1){
+    while (parent) {
+      if (parent.className && parent.className.search('date-calendar-wrap') > -1) {
 
-        return
+        return;
       }
       parent = parent.parentNode;
-      console.log(parent)
+      console.log(parent);
     }
     this.isCalendar = false;
   }
-
-
 
 
   /**
@@ -292,10 +340,10 @@ export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
     }
   }
 
-  private setComponentValue(value:any):void{
+  private setComponentValue(value: any): void {
     this.writeValue(value); //更新值
     this._onChangeCallback(value); //onchange回调
-    this.emChange.emit(value) //触发外部组件的change时间
+    this.emChange.emit(value); //触发外部组件的change时间
   }
 
 
@@ -308,27 +356,23 @@ export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
     this.isCalendar = true; //打开日历
 
 
-
     let _date = new Date(); //获取当前时间
     if (!this.inputRef.nativeElement.value) {
       let value = _date.toLocaleDateString();
 
-      this.setComponentValue(value)  //更新组件 值
+      this.setComponentValue(value);  //更新组件 值
 
-    }else{ //空值时初始化日历
+    } else { //空值时初始化日历
       try {
-        let date = new Date( this.inputRef.nativeElement.value );
-        let date_time:DateTime_ ={
-          year:date.getFullYear(),
-          month:date.getMonth()+1,
-          day:date.getDate(),
-          weekday:date.getDay(),
+        let date = new Date(this.inputRef.nativeElement.value);
+        let date_time: DateTime_ = {
+          year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate(), weekday: date.getDay(),
         };
 
         this.reveal_time = date_time;
 
-      }catch (e) {
-        throw new Error(e)
+      } catch (e) {
+        throw new Error(e);
       }
 
 
@@ -343,22 +387,19 @@ export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
   public calendarItemCheck(data: CalendarDay_) {
 
     let $date: DateTime_ = {
-      year: data.year,
-      month: data.month,
-      day: data.day,
-      weekday: new Date(data.year + '/' + data.month + '/' + data.day).getDay()
+      year: data.year, month: data.month, day: data.day, weekday: new Date(data.year + '/' + data.month + '/' + data.day).getDay()
     };
     console.log($date);
     this.current_select_time = $date;
 
-    let __value=this.current_select_time.year+'/'+this.current_select_time.month+'/'+this.current_select_time.day ; //更新值
+    let __value = this.current_select_time.year + '/' + this.current_select_time.month + '/' + this.current_select_time.day; //更新值
 
-  /*  this.writeValue(__value); //更新值
-    this._onChangeCallback(__value); //onchange回调
-    this.emChange.emit(__value); //触发外部组件的change时间*/
+    /*  this.writeValue(__value); //更新值
+      this._onChangeCallback(__value); //onchange回调
+      this.emChange.emit(__value); //触发外部组件的change时间*/
     this.setComponentValue(__value);  //更新组件 值
 
-    this.isCalendar = false ; //关闭弹出层
+    this.isCalendar = false; //关闭弹出层
 
   }
 
@@ -381,6 +422,12 @@ export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
   public toggleToNextYear(event): void {
     if (event && event.preventDefault) {
       event.preventDefault();
+    }
+
+    if (this.isYearChoice){ //切换年份选择列表
+      this.check_year += 10;
+      this.choiceYear(); //更新年份选择
+      return
     }
 
     this.reveal_time.year += 1;
@@ -410,7 +457,13 @@ export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
       event.preventDefault();
     }
 
-    this.reveal_time.year += 1;
+    if (this.isYearChoice){ //切换年份选择列表
+      this.check_year -= 10;
+      this.choiceYear(); //更新年份选择
+      return
+    }
+
+    this.reveal_time.year -= 1;
     this.reveal_time.month = 1;
     this.calendarListInit(); //更新日历视图
 
@@ -483,10 +536,82 @@ export class DateCalendarComponent  implements OnInit,ControlValueAccessor {
   }
 
   /**
-   * 选择年份 && 月
+   * 选择年份
    */
-  public choiceYear():void{
-    this.isYearChoice = true;
+  public choiceYear(): void {
+    !this.isYearChoice?this.isYearChoice = true:null;
+    let _difference: number = this.check_year % 10, outputArr: Array<number> = [];
+
+    for (let i = _difference; i >= 0; i--) {
+      outputArr.push(this.check_year - i);
+    }
+
+    for (let i = 1; i < 10 - _difference; i++) {
+      outputArr.push(this.check_year + i);
+    }
+
+    console.log(outputArr);
+    for (let i = 0; i < 4; i++) {
+      outputArr.unshift(this.check_year - _difference - (i + 1));
+    }
+
+    for (let i = 1; i <= 10 - _difference; i++) {
+      outputArr.push(this.check_year + 9 - _difference + i);
+    }
+
+    this.year_list = outputArr;
+  }
+
+  /**
+   * 选择月份
+   */
+  public choiceMonth(): void {
+
+    if (!this.month_list || !this.month_list.length) {
+      this.month_list = [{label: '一月', value: 0}, {label: '二月', value: 1}, {label: '三月', value: 2}, {label: '四月', value: 3}, {
+        label: '五月',
+        value: 4
+      }, {label: '六月', value: 5}, {label: '七月', value: 6}, {label: '八月', value: 7}, {label: '九月', value: 8}, {
+        label: '十月',
+        value: 9
+      }, {label: '十一月', value: 10}, {label: '十二月', value: 11},];
+    }
+
+    this.isMonthChoice = true;
+
+
+  }
+
+
+  /**
+   * 选择新的年份
+   * @param {number} val
+   */
+  public year_change_handle(val: number) {
+    this.reveal_time.year = val;
+    this.calendarListInit(); //更新日历视图
+    this.isYearChoice = false;
+  }
+
+
+  public month_change_handle(m: number) {
+    if (m > 11 || m < 0) {
+      throw  new Error('method __month_change_handle__ get an error argument ');
+    }
+
+
+    this.reveal_time.month = m + 1;
+    this.calendarListInit(); //更新日历视图
+    this.isMonthChoice = false;
+
+  }
+
+  /**
+   * 主动关闭
+   */
+  public dataCalendarDismiss() {
+    this.isCalendar = false;
+
   }
 
 

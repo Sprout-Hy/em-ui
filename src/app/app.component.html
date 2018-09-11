@@ -20,13 +20,13 @@
       </label>
       <em-checkbox (emChange)="checkChange( $event)" formControlName="check1"  ></em-checkbox>
       <em-checkbox (emChange)="checkChange( $event)" formControlName="check2"  ></em-checkbox>
-      <em-dateCalendar placeholder="请输入时间" (emChange)="dateChangaHandle($event)" formControlName="date"></em-dateCalendar>
+
 
       <div>
         <em-radio formControlName="radioA" [value]="'a'" [name]="'radio'"></em-radio>
         <em-radio formControlName="radioA" [value]=" 'b'" [name]="'radio'"></em-radio>
       </div>-->
-
+      <em-dateCalendar placeholder="请输入时间" (emChange)="dateChangaHandle($event)" formControlName="date"></em-dateCalendar>
       <em-counter emId="asdss" formControlName="count" (emChange)="valueChange($event)" ></em-counter>
 
       <em-cascade placeholder="请选择" [data]="cascadeData"  formControlName="select" (emChange)="select2ClickHandle($event)" ></em-cascade>

@@ -9,3 +9,10 @@ $data-calendar-border-radius:5px;
 $calendar-delete-icon-color:#A1A2A3;
 /*删除按钮位移距离*/
 $calendar-delete-icon-position:-6px;
+
+
+/*整体日期选择器 z-index */
+$data-calendar-zIndex:1000;
+
+/*遮罩层 z-index*/
+$data-calendar-popIndex:$data-calendar-zIndex - 1;
