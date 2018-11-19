@@ -83,7 +83,7 @@ export class CheckboxComponent implements OnInit,ControlValueAccessor
   set checked(val:any){
     console.log(val);
     if (this._value != val){
-      this._value = val;
+      this._value = this.coerceBooleanProperty(val);
       this.onChange(val);
     }
   }
@@ -160,5 +160,10 @@ export class CheckboxComponent implements OnInit,ControlValueAccessor
   setDisabledState(){
 
   }
+
+  coerceBooleanProperty(val:any):boolean {
+    return val != null && String(val)!= 'false' && val !=='';
+  }
+
 
 }

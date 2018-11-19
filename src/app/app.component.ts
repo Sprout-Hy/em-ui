@@ -15,7 +15,7 @@ import {SelectOptions_} from './inputs/select/select.component';
 export class AppComponent implements  OnInit{
   public isDisabledButton:boolean =false;
   title = 'app';
-  public ngmodel:any = {text:'',textNative:''};
+  public ngmodel:any = {text:'',textNative:'',check:false};
   public formModule:FormGroup;
   public alerc:any =null;
   public compRef:ComponentRef<any>;
@@ -28,16 +28,15 @@ export class AppComponent implements  OnInit{
   @ViewChild('text') textRef:ElementRef;
   constructor(private fb:FormBuilder,private cfr : ComponentFactoryResolver){
 
-    /*console.log(this.alerc)*/
     this.formModule = this.fb.group({
-      text:['',[]],
+      text:['text',[]],
       areaL:['',[]],
       check:[],
-      check1:[true],
-      check2:[],
+      check1:[false],
+      check2:[false],
       date:[''],
-      radioA:[],
-      radioB:[],
+      radioA:['radio_a' ],
+      radioB:['radio_x'],
       count:[12],
       select:[]
     });
@@ -114,14 +113,16 @@ export class AppComponent implements  OnInit{
     console.log(this.ngmodel.textNative)
   }
 
-  public checkChange(event){
+  public inputChange(event){
    /* console.log('__checkChange__');*/
-    console.log(this.formModule.value);
+    console.log(event);
     /*console.log(event.target.checked)*/
   }
 
   public radioChangeHandle(event){
-    console.info(this.formModule.value)
+   /* console.info(this.formModule.value)*/
+    console.log(event);
+    //console.log(this.formModule.value)
   }
 
   public dateChangaHandle(event){

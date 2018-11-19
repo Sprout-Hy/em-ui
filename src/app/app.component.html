@@ -4,61 +4,17 @@
     ui库
   </h4>
   <div class="components">
-   <!-- <em-button (emClick)="clickHandle()" class="" [disabled]="isDisabledButton"  >默认按钮</em-button>-->
     <form [formGroup]="formModule">
-  <!--    <div class="container " style="text-align: center; padding: 20px">
-        <em-input type=""  formControlName="text"  (emClick)="inputClickHandle($event)" (emChange)="valueChange($event)" placeholder="请输入" ></em-input>
-      </div>
-
       <label >
-        <em-checkbox (emChange)="checkChange( $event)" formControlName="check" [id]="'sdsdas'" ></em-checkbox>
-
-
-        <span style="vertical-align: middle">单选按钮</span>
-        <br>
-
+        <input type="radio" formControlName="radioB" value="radio_v" (change)="radioChangeHandle($event)">
+        nativeRadio_v
       </label>
-      <em-checkbox (emChange)="checkChange( $event)" formControlName="check1"  ></em-checkbox>
-      <em-checkbox (emChange)="checkChange( $event)" formControlName="check2"  ></em-checkbox>
-
-
-      <div>
-        <em-radio formControlName="radioA" [value]="'a'" [name]="'radio'"></em-radio>
-        <em-radio formControlName="radioA" [value]=" 'b'" [name]="'radio'"></em-radio>
-      </div>-->
-      <em-dateCalendar placeholder="请输入时间" (emChange)="dateChangaHandle($event)" formControlName="date"></em-dateCalendar>
-      <em-counter emId="asdss" formControlName="count" (emChange)="valueChange($event)" ></em-counter>
-
-      <em-cascade placeholder="请选择" [data]="cascadeData"  formControlName="select" (emChange)="select2ClickHandle($event)" ></em-cascade>
-
+      <label >
+        <input type="radio"  formControlName="radioB" value="radio_x" (change)="radioChangeHandle($event)">
+        nativeRadio_x
+      </label>
+      <br>
+      <em-rate [em-max]="5" [value]="2" [readonly]="false" (emChange)="inputChange()" ></em-rate>
     </form>
-
-
-    <!--<div>
-
-      <em-textarea (emChange)="textareaChange()" name="ddasd" [(ngModel)]="ngmodel.textNative"></em-textarea>
-      <br>
-
-
-      <br>
-
-      <em-dateCalendar placeholder="请输入时间" ></em-dateCalendar>
-      <br>
-
-    </div>
-
-    <div class="counter">
-
-    </div>-->
-
-   <!-- <em-button (emClick)="toggle()">toggle</em-button>
-    <em-dialog [data]="alerc" #alertContrl>
-    </em-dialog>
-    <br>
-    <h4></h4>
-    <em-dateCalendar placeholder="请输入时间" ></em-dateCalendar>
-    <br>-->
-
-
   </div>
 </div>

@@ -1,6 +1,7 @@
 /**
- * create by Eric·hu .
- * 2018-9
+ * cascade.components.ts
+ * EmmUi
+ * create by Eric·hu on 2018-9.
  * 当我写下这个组件的时候，只有我和上帝知道这玩意是干啥的
  */
 

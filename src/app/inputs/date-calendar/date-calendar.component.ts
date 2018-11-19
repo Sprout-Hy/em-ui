@@ -250,7 +250,7 @@ export class DateCalendarComponent implements OnInit, ControlValueAccessor {
 
   }
 
-  public calendarClose(event) {
+  public calendarClose(event:MouseEvent) {
 
     let target: any = event;
     if (target == this.rootCalendar.nativeElement) { //是否是根元素 #rootCalendar
@@ -340,6 +340,10 @@ export class DateCalendarComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  /**
+   *
+   * @param value
+   */
   private setComponentValue(value: any): void {
     this.writeValue(value); //更新值
     this._onChangeCallback(value); //onchange回调

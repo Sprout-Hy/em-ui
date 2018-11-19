@@ -10,6 +10,7 @@ import { DateCalendarComponent } from './date-calendar/date-calendar.component';
 import { CounterComponent } from './counter/counter.component';
 import { SelectComponent } from './select/select.component';
 import { CascadeComponent } from './cascade/cascade.component';
+import { RateComponent } from './rate/rate.component';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { CascadeComponent } from './cascade/cascade.component';
     CounterComponent,
     SelectComponent,
     CascadeComponent,
+    RateComponent,
   ],
   exports:[
     InputComponent,
@@ -38,9 +40,11 @@ import { CascadeComponent } from './cascade/cascade.component';
     CounterComponent,
     SelectComponent,
     CascadeComponent,
+    RateComponent,
   ],
   entryComponents:[
     InputComponent,
   ],
 })
 export class InputsModule { }
+

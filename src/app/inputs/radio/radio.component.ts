@@ -1,4 +1,15 @@
-import {Component, ElementRef, EventEmitter, forwardRef, Input, OnInit, Output, Provider, Renderer2, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  forwardRef, HostListener,
+  Input,
+  OnInit,
+  Output,
+  Provider,
+  Renderer2,
+  ViewChild
+} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 
@@ -13,27 +24,26 @@ const noop = () => {
 
 @Component({
   selector: 'em-radio',
-
   template: `
     <div class="em-radio-shell">
       <label>
-
-        <input
-          ngModel
-          #emRadio
-          type="radio"
-          hidden
-          [attr.name]="nativeName"
-          [class]=" 'em-radio '+ className "
-          [style]="_secureStyle"
-          [(ngModel)]="checked"
-          [checked]="checked"
-          [disabled]="disabled"
-          [attr.value]="nativeValue"
-          (change)="inputChangeHandle($event)"
-        />
+       
 
         <span class="em-radio-delegate">
+           <input
+             ngModel
+             #emRadio
+             type="radio"
+             hidden
+             [attr.name]="nativeName"
+             [class]=" 'em-radio-ipt '+ className "
+             [style]="_secureStyle"
+             [(ngModel)]="checked"
+             [checked]="checked"
+             [disabled]="disabled"
+             [attr.value]="nativeValue"
+             (change)="inputChangeHandle($event)"
+           />
           <span class="radio-delegate-inr">
             
           </span>
@@ -52,7 +62,7 @@ export class RadioComponent implements OnInit, ControlValueAccessor {
   private onChange: (_: any) => void = noop;
   private _value: any = '';
   private _disabled: boolean = false;
-
+  private _autoFocus:boolean = false;
 
   public _secureStyle:SafeStyle = null;
   @ViewChild('emRadio') radioRef:ElementRef;
@@ -67,6 +77,15 @@ export class RadioComponent implements OnInit, ControlValueAccessor {
   @Input('name') nativeName:string = '';
   @Input('id') nativeId:string = '';
   @Input('value') nativeValue:any = '';
+
+  @Input('emAutoFocus') set emAutoFocus(val:boolean){
+    this._autoFocus = val;
+  }
+
+  get emAutoFocus():boolean{
+    return this._autoFocus
+  }
+
   @Input() set checked(val: any) {
     console.log(val);
     if (this._value != val) {
@@ -99,7 +118,11 @@ export class RadioComponent implements OnInit, ControlValueAccessor {
   @Output() emChange:EventEmitter<any> = new EventEmitter<any>(); //valueChange handle
  /* @Output() emBlur :EventEmitter<any> = new EventEmitter<any>(); //blur
   @Output() emFocus :EventEmitter<any> = new EventEmitter<any>();*/
-  constructor(private filtration: DomSanitizer,private _renderer:Renderer2, private _elementRef:ElementRef) {
+  constructor(
+    private filtration: DomSanitizer,
+    private _renderer:Renderer2,
+
+    private _elementRef:ElementRef) {
 
   }
 
@@ -120,17 +143,43 @@ export class RadioComponent implements OnInit, ControlValueAccessor {
   public setStyle() {
 
     console.log('__setStyle__');
-    console.log(new Date().getTime());
+    //console.log(new Date().getTime());
     return this.filtration.bypassSecurityTrustStyle(this.nativeStyle + this.radioRef.nativeElement.style );
   }
 
+  /** 获取焦点 **/
+  public realizeAutoFocus():void{
+    if (this.emAutoFocus) {
+      this._renderer.setAttribute(this.radioRef.nativeElement,'autofocus','autofocus')
+    }else{
+      this._renderer.removeAttribute(this.radioRef.nativeElement,'autofocus','autofocus')
+    }
+  }
 
+  /**  **/
+  public realizeInputFocus():void{
+    if (this.radioRef && this.checked && document.activeElement.nodeName == 'BODY'){
+      this.radioRef.nativeElement.focus()
+    }else{
+      this.radioRef.nativeElement.blur()
+    }
+  }
+
+  @HostListener('click', ['$event'])
+  onClick(event:MouseEvent):void{
+    event.preventDefault();
+    if (this.checked){
+      this.realizeInputFocus();
+      return
+    }
+  }
   /**
    * implementation ControlValueAccessor
    * @writeValue //设置原生表单控件的值
    */
   writeValue(val: any): void {
     this._value = val;
+    debugger
   /*  this._renderer.setProperty(this.radioRef.nativeElement, 'checked', val == this.radioRef.nativeElement.value);*/
 
   }
@@ -166,3 +215,4 @@ export class RadioComponent implements OnInit, ControlValueAccessor {
 
 
 }
+

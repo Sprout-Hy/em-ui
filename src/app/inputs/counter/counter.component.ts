@@ -76,6 +76,7 @@ export class CounterComponent extends InputComponent implements OnInit,ControlVa
 
   @Input() set readonly(val: any) {
     this._readonly != val ? this._readonly = val : null;
+    debugger
 
   }
 
